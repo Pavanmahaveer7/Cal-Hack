@@ -1,21 +1,119 @@
 const axios = require('axios')
 
-// Mock AI service for hackathon - replace with actual Gemini API
+// Real AI service using Gemini API
 class AIService {
   constructor() {
-    this.apiKey = process.env.GEMINI_API_KEY || 'mock-key'
+    this.apiKey = process.env.GEMINI_API_KEY
     this.baseUrl = 'https://generativelanguage.googleapis.com/v1beta'
+    this.model = 'gemini-2.0-flash'
   }
 
   async generateFlashcards(text) {
     try {
-      // Mock flashcard generation for hackathon
-      const mockFlashcards = this.generateMockFlashcards(text)
-      return mockFlashcards
+      console.log('🤖 AI Service: Starting flashcard generation')
+      console.log('🔑 API Key present:', !!this.apiKey)
+      console.log('🔑 API Key value:', this.apiKey ? this.apiKey.substring(0, 10) + '...' : 'None')
+      
+      if (!this.apiKey || this.apiKey === 'mock-key') {
+        console.log('⚠️ Using mock flashcards - set GEMINI_API_KEY for real AI generation')
+        return this.generateMockFlashcards(text)
+      }
+
+      console.log('🚀 Calling Gemini API...')
+      const prompt = this.createFlashcardPrompt(text)
+      console.log('📝 Prompt created, length:', prompt.length)
+      
+      const response = await this.callGeminiAPI(prompt)
+      console.log('✅ Gemini API response received')
+      
+      const flashcards = this.parseFlashcards(response)
+      console.log('📋 Parsed flashcards:', flashcards.length)
+      
+      return flashcards
     } catch (error) {
-      console.error('Error generating flashcards:', error)
-      throw new Error('Failed to generate flashcards')
+      console.error('❌ Error generating flashcards:', error.message)
+      console.error('❌ Error details:', error)
+      // Fallback to mock flashcards
+      console.log('🔄 Falling back to mock flashcards')
+      return this.generateMockFlashcards(text)
     }
+  }
+
+  createFlashcardPrompt(text) {
+    return `Generate educational flashcards from the following text. Create flashcards that are suitable for college students studying this material. Include both term-definition pairs and concept questions.
+
+Text: "${text}"
+
+Please generate 10-15 flashcards in the following JSON format:
+[
+  {
+    "type": "definition",
+    "front": "Term or concept",
+    "back": "Definition or explanation",
+    "difficulty": "beginner|intermediate|advanced",
+    "subject": "Subject area"
+  },
+  {
+    "type": "question",
+    "front": "Question about the concept",
+    "back": "Answer with explanation",
+    "difficulty": "beginner|intermediate|advanced",
+    "subject": "Subject area"
+  }
+]
+
+Focus on key concepts, important terms, and understanding questions. Make them educational and useful for studying.`
+  }
+
+  async callGeminiAPI(prompt) {
+    const response = await axios.post(
+      `${this.baseUrl}/models/${this.model}:generateContent?key=${this.apiKey}`,
+      {
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 2048
+        }
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+
+    return response.data.candidates[0].content.parts[0].text
+  }
+
+  parseFlashcards(aiResponse) {
+    try {
+      // Extract JSON from the response
+      const jsonMatch = aiResponse.match(/\[[\s\S]*\]/)
+      if (jsonMatch) {
+        const flashcards = JSON.parse(jsonMatch[0])
+        return flashcards.map((card, index) => ({
+          id: `ai_${Date.now()}_${index}`,
+          type: card.type || 'definition',
+          front: card.front,
+          back: card.back,
+          difficulty: card.difficulty || 'intermediate',
+          subject: card.subject || 'General',
+          source: 'ai_generated',
+          createdAt: new Date().toISOString()
+        }))
+      }
+    } catch (error) {
+      console.error('Error parsing AI response:', error)
+    }
+    
+    // Fallback to mock if parsing fails
+    return this.generateMockFlashcards(aiResponse)
   }
 
   generateMockFlashcards(text) {

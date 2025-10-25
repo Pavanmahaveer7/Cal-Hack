@@ -4,6 +4,7 @@ const pdfParse = require('pdf-parse')
 const fs = require('fs')
 const path = require('path')
 const { generateFlashcards } = require('../services/aiService')
+const dbService = require('../services/databaseService')
 
 const router = express.Router()
 
@@ -45,6 +46,7 @@ router.post('/pdf', upload.single('pdf'), async (req, res) => {
 
     const filePath = req.file.path
     const fileName = req.file.originalname
+    const userId = req.body.userId || 'demo-user'
 
     // Extract text from PDF
     const dataBuffer = fs.readFileSync(filePath)
@@ -57,28 +59,76 @@ router.post('/pdf', upload.single('pdf'), async (req, res) => {
       })
     }
 
+    // Create or update user
+    let user = await dbService.getUser(userId)
+    if (!user) {
+      user = await dbService.createUser({
+        userId,
+        email: `${userId}@braillience.com`,
+        name: 'Demo User'
+      })
+    }
+
+    // Create document record
+    const document = await dbService.createDocument({
+      userId,
+      fileName: req.file.filename,
+      originalName: fileName,
+      filePath,
+      fileSize: req.file.size,
+      mimeType: req.file.mimetype,
+      extractedText,
+      textLength: extractedText.length,
+      processingStatus: 'processing',
+      metadata: {
+        title: fileName.replace('.pdf', ''),
+        pageCount: pdfData.numpages,
+        wordCount: extractedText.split(/\s+/).length
+      }
+    })
+
     // Generate flashcards using AI
     const flashcards = await generateFlashcards(extractedText)
 
-    // Save PDF and flashcards to user profile (mock for now)
-    const userProfile = {
-      userId: req.body.userId || 'demo-user',
-      fileName,
-      filePath,
-      extractedText,
-      flashcards,
-      createdAt: new Date().toISOString()
+    // Save flashcards to database
+    const savedFlashcards = []
+    for (const flashcard of flashcards) {
+      const saved = await dbService.createFlashcard({
+        userId,
+        documentId: document.id,
+        type: flashcard.type || 'definition',
+        front: flashcard.front,
+        back: flashcard.back,
+        difficulty: flashcard.difficulty || 'intermediate',
+        subject: flashcard.subject || 'General',
+        source: 'ai_generated'
+      })
+      savedFlashcards.push(saved)
     }
+
+    // Update document status
+    await dbService.updateDocument(document.id, { processingStatus: 'completed' })
+
+    // Update user stats
+    const currentStats = user.stats || {}
+    await dbService.updateUser(userId, {
+      stats: {
+        ...currentStats,
+        documentsUploaded: (currentStats.documentsUploaded || 0) + 1,
+        flashcardsCreated: (currentStats.flashcardsCreated || 0) + flashcards.length
+      }
+    })
 
     res.json({
       success: true,
       message: 'PDF processed successfully',
       data: {
+        documentId: document.id,
         fileName,
         textLength: extractedText.length,
         flashcardCount: flashcards.length,
-        flashcards: flashcards.slice(0, 5), // Return first 5 flashcards as preview
-        userProfile
+        flashcards: savedFlashcards.slice(0, 5), // Return first 5 flashcards as preview
+        processingTime: new Date().toISOString()
       }
     })
 
@@ -91,37 +141,53 @@ router.post('/pdf', upload.single('pdf'), async (req, res) => {
   }
 })
 
-// Get user's uploaded PDFs
-router.get('/pdfs/:userId', (req, res) => {
+// Get user's uploaded documents
+router.get('/pdfs/:userId', async (req, res) => {
   try {
     const { userId } = req.params
     
-    // Mock data for now - in real app, fetch from database
-    const userPDFs = [
-      {
-        id: '1',
-        fileName: 'Biology Chapter 1.pdf',
-        uploadDate: '2024-01-15',
-        flashcardCount: 25,
-        lastStudied: '2024-01-20'
-      },
-      {
-        id: '2', 
-        fileName: 'Chemistry Notes.pdf',
-        uploadDate: '2024-01-18',
-        flashcardCount: 18,
-        lastStudied: null
-      }
-    ]
+    const documents = await dbService.getDocuments(userId)
 
     res.json({
       success: true,
-      data: userPDFs
+      data: documents.map(doc => ({
+        id: doc.id,
+        fileName: doc.originalName,
+        uploadDate: doc.createdAt,
+        flashcardCount: doc.flashcardCount,
+        processingStatus: doc.processingStatus,
+        metadata: doc.metadata
+      }))
     })
   } catch (error) {
-    console.error('Error fetching user PDFs:', error)
+    console.error('Error fetching user documents:', error)
     res.status(500).json({ 
-      error: 'Failed to fetch user PDFs',
+      error: 'Failed to fetch documents',
+      message: error.message 
+    })
+  }
+})
+
+// Get flashcards for a specific document
+router.get('/document/:documentId/flashcards', async (req, res) => {
+  try {
+    const { documentId } = req.params
+    const { userId } = req.query
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' })
+    }
+
+    const flashcards = await dbService.getFlashcards(userId, documentId)
+
+    res.json({
+      success: true,
+      data: flashcards
+    })
+  } catch (error) {
+    console.error('Error fetching flashcards:', error)
+    res.status(500).json({ 
+      error: 'Failed to fetch flashcards',
       message: error.message 
     })
   }

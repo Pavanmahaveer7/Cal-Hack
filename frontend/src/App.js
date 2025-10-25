@@ -5,6 +5,8 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Learn from './components/Learn';
 import Test from './components/Test';
+import Upload from './components/Upload';
+import Flashcards from './components/Flashcards';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -32,6 +34,8 @@ function AppContent() {
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
           <Route path="/learn" element={user ? <Learn /> : <Navigate to="/login" />} />
           <Route path="/test" element={user ? <Test /> : <Navigate to="/login" />} />
+          <Route path="/upload" element={user ? <Upload /> : <Navigate to="/login" />} />
+          <Route path="/flashcards" element={user ? <Flashcards /> : <Navigate to="/login" />} />
         </Routes>
       </main>
       <Footer />

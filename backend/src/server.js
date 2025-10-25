@@ -3,6 +3,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
 const rateLimit = require('express-rate-limit')
+const database = require('./config/database')
 require('dotenv').config()
 
 const app = express()
@@ -33,6 +34,7 @@ app.use('/api/flashcards', require('./routes/flashcards'))
 app.use('/api/learning', require('./routes/learning'))
 app.use('/api/voice', require('./routes/voice'))
 app.use('/api/test', require('./routes/test'))
+app.use('/api/test-ai', require('./routes/test-ai'))
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -57,9 +59,38 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
 
-app.listen(PORT, () => {
-  console.log(`🚀 Braillience API server running on port ${PORT}`)
-  console.log(`📚 Environment: ${process.env.NODE_ENV || 'development'}`)
+// Start server with database connection
+async function startServer() {
+  try {
+    // Connect to database
+    await database.connect()
+    
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`🚀 Braillience API server running on port ${PORT}`)
+      console.log(`📚 Environment: ${process.env.NODE_ENV || 'development'}`)
+      console.log(`🗄️ Database: ${database.getConnectionStatus().isConnected ? 'Connected' : 'Disconnected'}`)
+    })
+  } catch (error) {
+    console.error('❌ Failed to start server:', error)
+    process.exit(1)
+  }
+}
+
+// Handle graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('\n🛑 Shutting down server...')
+  await database.disconnect()
+  process.exit(0)
 })
+
+process.on('SIGTERM', async () => {
+  console.log('\n🛑 Shutting down server...')
+  await database.disconnect()
+  process.exit(0)
+})
+
+// Start the server
+startServer()
 
 module.exports = app

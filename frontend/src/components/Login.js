@@ -30,10 +30,33 @@ function Login() {
     }
   };
 
-  const handleDemoLogin = () => {
-    setEmail('demo@braillience.com');
-    setPassword('demo123');
-    handleSubmit({ preventDefault: () => {} });
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/demo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Store the token and user data
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('user', JSON.stringify(result.data.user));
+        toast.success('Demo login successful!');
+        navigate('/');
+      } else {
+        toast.error('Demo login failed');
+      }
+    } catch (error) {
+      console.error('Demo login error:', error);
+      toast.error('Demo login failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

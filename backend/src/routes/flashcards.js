@@ -1,54 +1,35 @@
 const express = require('express')
 const { generateFlashcards } = require('../services/aiService')
+const dbService = require('../services/databaseService')
 
 const router = express.Router()
 
 // Get flashcards for a user
-router.get('/:userId', (req, res) => {
+router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params
-    const { deckId, type, difficulty } = req.query
+    const { documentId, type, difficulty } = req.query
 
-    // Mock flashcard data for hackathon
-    const mockFlashcards = [
-      {
-        id: '1',
-        question: 'What is photosynthesis?',
-        answer: 'The process by which plants convert light energy into chemical energy.',
-        type: 'definition',
-        difficulty: 'medium',
-        category: 'biology',
-        deckId: 'deck-1',
-        createdAt: '2024-01-15T10:00:00Z'
-      },
-      {
-        id: '2',
-        question: 'Explain the relationship between photosynthesis and cellular respiration.',
-        answer: 'Photosynthesis produces oxygen and glucose, which are used in cellular respiration to create energy.',
-        type: 'concept',
-        difficulty: 'hard',
-        category: 'biology',
-        deckId: 'deck-1',
-        createdAt: '2024-01-15T10:05:00Z'
-      },
-      {
-        id: '3',
-        question: 'What are the main components of a plant cell?',
-        answer: 'Cell wall, cell membrane, nucleus, chloroplasts, mitochondria, and vacuole.',
-        type: 'definition',
-        difficulty: 'easy',
-        category: 'biology',
-        deckId: 'deck-1',
-        createdAt: '2024-01-15T10:10:00Z'
+    console.log(`📚 Fetching flashcards for user: ${userId}`)
+
+    // Get all flashcards for the user
+    let flashcards = []
+    
+    if (documentId) {
+      // Get flashcards for a specific document
+      flashcards = await dbService.getFlashcards(userId, documentId)
+    } else {
+      // Get all flashcards for the user from all documents
+      const documents = await dbService.getDocuments(userId)
+      for (const doc of documents) {
+        const docFlashcards = await dbService.getFlashcards(userId, doc.id)
+        flashcards = flashcards.concat(docFlashcards)
       }
-    ]
-
-    let filteredFlashcards = mockFlashcards
+    }
 
     // Apply filters
-    if (deckId) {
-      filteredFlashcards = filteredFlashcards.filter(card => card.deckId === deckId)
-    }
+    let filteredFlashcards = flashcards
+
     if (type) {
       filteredFlashcards = filteredFlashcards.filter(card => card.type === type)
     }
@@ -56,13 +37,13 @@ router.get('/:userId', (req, res) => {
       filteredFlashcards = filteredFlashcards.filter(card => card.difficulty === difficulty)
     }
 
+    console.log(`✅ Found ${filteredFlashcards.length} flashcards for user ${userId}`)
+
     res.json({
       success: true,
-      data: {
-        flashcards: filteredFlashcards,
-        total: filteredFlashcards.length,
-        filters: { deckId, type, difficulty }
-      }
+      data: filteredFlashcards,
+      total: filteredFlashcards.length,
+      filters: { documentId, type, difficulty }
     })
 
   } catch (error) {

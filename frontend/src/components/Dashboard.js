@@ -27,8 +27,11 @@ function Dashboard() {
         break;
       case 'upload pdf':
       case 'upload document':
-        // For now, just show a message
-        alert('PDF upload feature coming soon!');
+        navigate('/upload');
+        break;
+      case 'study flashcards':
+      case 'flashcards':
+        navigate('/flashcards');
         break;
       case 'view profile':
       case 'profile':
@@ -66,24 +69,24 @@ function Dashboard() {
 
   const quickActions = [
     {
-      title: 'Learn New Words',
-      description: 'Start learning new vocabulary',
+      title: 'Upload PDF',
+      description: 'Upload documents to generate flashcards',
       icon: FiBookOpen,
-      link: '/learn',
+      link: '/upload',
       color: 'primary'
+    },
+    {
+      title: 'Study Flashcards',
+      description: 'Study your generated flashcards',
+      icon: FiBookOpen,
+      link: '/flashcards',
+      color: 'secondary'
     },
     {
       title: 'Test Yourself',
       description: 'Practice with flashcards',
       icon: FiAward,
       link: '/test',
-      color: 'secondary'
-    },
-    {
-      title: 'Review Progress',
-      description: 'Check your learning stats',
-      icon: FiTrendingUp,
-      link: '/progress',
       color: 'accent'
     }
   ];
@@ -100,7 +103,7 @@ function Dashboard() {
           {/* Voice Interface */}
           <div className="voice-interface" role="region" aria-label="Voice Commands">
             <p className="voice-instructions">
-              Say "Start Learning", "Take Test", "Upload PDF", or "Help" to navigate
+              Say "Study Flashcards", "Take Test", "Upload PDF", or "Help" to navigate
             </p>
             <div className="voice-controls">
               <button
