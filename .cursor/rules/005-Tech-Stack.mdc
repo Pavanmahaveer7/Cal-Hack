@@ -1,0 +1,71 @@
+---
+description: "Technology stack decisions and framework-specific guidelines for the Cal-Hack project
+globs: 
+  - "**/*"
+alwaysApply: false
+---
+# Technology Stack Guidelines
+
+## Overview
+This rule defines the technology stack decisions for the Cal-Hack project (Duolingo for Blind Users). Reference this rule when implementing features to ensure consistency with chosen technologies.
+
+## Frontend Technology
+**Status:** TO BE DECIDED
+- React (recommended for accessibility)
+- Vue.js (alternative)
+- Vanilla JavaScript (lightweight option)
+
+## Backend Technology  
+**Status:** TO BE DECIDED
+- Node.js/Express (recommended for JavaScript ecosystem)
+- Python/FastAPI (alternative)
+- PHP/Laravel (alternative)
+
+## Database
+**Status:** TO BE DECIDED
+- PostgreSQL (recommended for relational data)
+- MongoDB (alternative for document storage)
+- SQLite (development/testing)
+
+## Accessibility Libraries
+**Status:** TO BE DECIDED
+- React Aria (if using React)
+- ARIA libraries
+- Screen reader testing tools
+
+## Audio Processing
+**Status:** TO BE DECIDED
+- Web Audio API (native)
+- Howler.js (audio library)
+- Speech Synthesis API
+
+## Testing Framework
+**Status:** TO BE DECIDED
+- Jest (JavaScript testing)
+- Cypress (E2E testing)
+- Accessibility testing tools
+
+## Deployment
+**Status:** TO BE DECIDED
+- Vercel/Netlify (frontend)
+- Railway/Heroku (backend)
+- AWS (full stack)
+
+## Usage Instructions
+1. Reference this rule when making technology decisions: `@.cursor/rules/005-Tech-Stack.mdc`
+2. Update this file as decisions are made
+3. Ensure all chosen technologies support accessibility requirements
+4. Consider performance implications for audio-heavy features
+
+## Accessibility Requirements
+- All technologies must support screen readers
+- Keyboard navigation compatibility
+- Audio processing capabilities
+- Mobile accessibility support
+- WCAG 2.1 AA compliance
+
+## Next Steps
+1. Use PRD generation to define requirements for each technology choice
+2. Create proof-of-concept implementations
+3. Test accessibility with actual screen readers
+4. Update this file with final decisions

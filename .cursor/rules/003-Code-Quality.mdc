@@ -104,11 +104,66 @@ function createAccessibleButton(text, onClick, options = {}) {
 - Use lazy loading for non-critical components
 - Implement proper caching strategies
 
-## Code Organization
+## Clean Code Principles
+
+### Naming Conventions
+- Use meaningful, descriptive names for variables, functions, and classes
+- Avoid abbreviations and single-letter variables (except for loops)
+- Use verbs for functions (e.g., `calculateTotal()`, `validateUser()`)
+- Use nouns for variables and classes (e.g., `userEmail`, `PaymentProcessor`)
+
+### Function Design
+- Keep functions small and focused (ideally under 20 lines)
+- Functions should do one thing and do it well
+- Use descriptive function names that explain what they do
+- Avoid deep nesting (max 3-4 levels)
+
+### Code Organization
 - Separate concerns (UI, logic, accessibility)
 - Use consistent file structure
 - Group related functionality
 - Keep components small and focused
+- Add comments only when necessary (code should be self-documenting)
+- Remove dead code and unused imports
+
+## Software Engineering Principles
+
+### SOLID Principles
+- **Single Responsibility**: Each class/function should have one reason to change
+- **Open/Closed**: Open for extension, closed for modification
+- **Liskov Substitution**: Derived classes must be substitutable for base classes
+- **Interface Segregation**: No client should depend on methods it doesn't use
+- **Dependency Inversion**: Depend on abstractions, not concretions
+
+### DRY Principle
+- Don't Repeat Yourself - extract common functionality
+- Use functions, classes, and modules to avoid duplication
+- Create reusable components and utilities
+
+### Design Patterns
+- Use appropriate design patterns when they solve real problems
+- Common patterns: Factory, Observer, Strategy, Builder
+- Don't over-engineer - use patterns when they add value
+
+## Code Quality Standards
+
+### Error Handling
+- Use try-catch blocks appropriately
+- Provide meaningful error messages
+- Log errors for debugging
+- Handle edge cases gracefully
+
+### Testing
+- Write unit tests for all functions
+- Test edge cases and error conditions
+- Aim for high test coverage
+- Use descriptive test names
+
+### Performance
+- Optimize for readability first, performance second
+- Profile before optimizing
+- Use appropriate data structures
+- Avoid premature optimization
 
 ## Accessibility Code Quality
 - Every component must be screen reader compatible
