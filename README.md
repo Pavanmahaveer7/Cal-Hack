@@ -30,7 +30,7 @@ To make language learning accessible to everyone, regardless of visual ability, 
 - **Pavan Singara** - Project Lead
 - **Ragavan** - ragavan.ims@gmail.com
 - **Arnav Dhariya** - arnavdhariya
-- **James Khan** - khanjames160@gmail.com
+- **Bilal Hasan** - khanjames160@gmail.com
 
 ## 🧠 CursorAI Setup
 
