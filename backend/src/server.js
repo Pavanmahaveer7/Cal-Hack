@@ -33,6 +33,7 @@ app.use('/api/upload', require('./routes/upload'))
 app.use('/api/flashcards', require('./routes/flashcards'))
 app.use('/api/learning', require('./routes/learning'))
 app.use('/api/voice', require('./routes/voice'))
+app.use('/api/voice-learning', require('./routes/voice-learning')) // New voice-driven learning
 app.use('/api/test', require('./routes/test'))
 app.use('/api/test-ai', require('./routes/test-ai'))
 

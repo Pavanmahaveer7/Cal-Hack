@@ -33,6 +33,10 @@ function Dashboard() {
       case 'flashcards':
         navigate('/flashcards');
         break;
+      case 'voice learning':
+      case 'voice study':
+        navigate('/voice-learning');
+        break;
       case 'view profile':
       case 'profile':
         // For now, just show a message
@@ -76,17 +80,17 @@ function Dashboard() {
       color: 'primary'
     },
     {
+      title: 'Voice Learning',
+      description: 'Study with AI voice conversation',
+      icon: FiVolume2,
+      link: '/voice-learning',
+      color: 'secondary'
+    },
+    {
       title: 'Study Flashcards',
       description: 'Study your generated flashcards',
       icon: FiBookOpen,
       link: '/flashcards',
-      color: 'secondary'
-    },
-    {
-      title: 'Test Yourself',
-      description: 'Practice with flashcards',
-      icon: FiAward,
-      link: '/test',
       color: 'accent'
     }
   ];
@@ -103,7 +107,7 @@ function Dashboard() {
           {/* Voice Interface */}
           <div className="voice-interface" role="region" aria-label="Voice Commands">
             <p className="voice-instructions">
-              Say "Study Flashcards", "Take Test", "Upload PDF", or "Help" to navigate
+              Say "Voice Learning", "Study Flashcards", "Upload PDF", or "Help" to navigate
             </p>
             <div className="voice-controls">
               <button

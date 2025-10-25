@@ -7,6 +7,7 @@ import Learn from './components/Learn';
 import Test from './components/Test';
 import Upload from './components/Upload';
 import Flashcards from './components/Flashcards';
+import VoiceLearning from './components/VoiceLearning';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -36,6 +37,7 @@ function AppContent() {
           <Route path="/test" element={user ? <Test /> : <Navigate to="/login" />} />
           <Route path="/upload" element={user ? <Upload /> : <Navigate to="/login" />} />
           <Route path="/flashcards" element={user ? <Flashcards /> : <Navigate to="/login" />} />
+          <Route path="/voice-learning" element={user ? <VoiceLearning /> : <Navigate to="/login" />} />
         </Routes>
       </main>
       <Footer />
