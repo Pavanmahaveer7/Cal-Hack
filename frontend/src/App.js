@@ -8,6 +8,7 @@ import Test from './components/Test';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { VoiceProvider } from './components/voice/VoiceProvider';
 import './App.css';
 
 function AppContent() {
@@ -50,9 +51,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <VoiceProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </VoiceProvider>
   );
 }
 
