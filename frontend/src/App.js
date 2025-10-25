@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
@@ -24,47 +24,23 @@ function AppContent() {
 
   return (
     <div className="app">
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
-      
       <Header />
-      
-      <main id="main-content" className="main-content">
+      <main className="main-content">
         <Routes>
-          <Route 
-            path="/login" 
-            element={user ? <Navigate to="/dashboard" replace /> : <Login />} 
-          />
-          <Route 
-            path="/dashboard" 
-            element={user ? <Dashboard /> : <Navigate to="/login" replace />} 
-          />
-          <Route 
-            path="/learn" 
-            element={user ? <Learn /> : <Navigate to="/login" replace />} 
-          />
-          <Route 
-            path="/test" 
-            element={user ? <Test /> : <Navigate to="/login" replace />} 
-          />
-          <Route 
-            path="/" 
-            element={<Navigate to={user ? "/dashboard" : "/login"} replace />} 
-          />
+          <Route path="/" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+          <Route path="/learn" element={user ? <Learn /> : <Navigate to="/login" />} />
+          <Route path="/test" element={user ? <Test /> : <Navigate to="/login" />} />
         </Routes>
       </main>
-      
       <Footer />
       <Toaster 
         position="top-right"
         toastOptions={{
           duration: 4000,
           style: {
-            background: 'var(--surface-color)',
-            color: 'var(--text-primary)',
-            border: '1px solid var(--border-color)',
-            fontSize: 'var(--font-size-sm)',
+            background: '#363636',
+            color: '#fff',
           },
         }}
       />
@@ -75,9 +51,7 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <AppContent />
     </AuthProvider>
   );
 }

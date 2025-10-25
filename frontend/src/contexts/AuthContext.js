@@ -1,87 +1,70 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
+};
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session on app load
-    const savedUser = localStorage.getItem('braillience_user');
-    if (savedUser) {
+    // Check for existing session
+    const checkAuth = async () => {
       try {
-        setUser(JSON.parse(savedUser));
+        const token = localStorage.getItem('token');
+        if (token) {
+          // For demo purposes, set a mock user
+          setUser({
+            id: 'demo-user',
+            name: 'Demo User',
+            email: 'demo@braillience.com'
+          });
+        }
       } catch (error) {
-        console.error('Error parsing saved user:', error);
-        localStorage.removeItem('braillience_user');
+        console.error('Auth check failed:', error);
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (email, password) => {
     try {
-      setLoading(true);
+      // For demo purposes, accept any credentials
+      const response = await axios.post('/api/auth/demo', {
+        email,
+        password
+      });
       
-      // Simulate API call - replace with actual backend integration
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock authentication - replace with real API call
-      if (email && password) {
-        const userData = {
-          id: '1',
-          email: email,
-          name: email.split('@')[0],
-          avatar: null,
-          preferences: {
-            audioEnabled: true,
-            highContrast: false,
-            fontSize: 'medium'
-          }
-        };
-        
-        setUser(userData);
-        localStorage.setItem('braillience_user', JSON.stringify(userData));
-        toast.success(`Welcome back, ${userData.name}!`);
-        return { success: true };
-      } else {
-        throw new Error('Invalid credentials');
-      }
+      const { token, user: userData } = response.data;
+      localStorage.setItem('token', token);
+      setUser(userData);
+      return { success: true };
     } catch (error) {
-      toast.error(error.message || 'Login failed. Please try again.');
+      console.error('Login failed:', error);
       return { success: false, error: error.message };
-    } finally {
-      setLoading(false);
     }
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
     setUser(null);
-    localStorage.removeItem('braillience_user');
-    toast.success('Logged out successfully');
-  };
-
-  const updateUser = (updates) => {
-    const updatedUser = { ...user, ...updates };
-    setUser(updatedUser);
-    localStorage.setItem('braillience_user', JSON.stringify(updatedUser));
   };
 
   const value = {
     user,
     login,
     logout,
-    updateUser,
     loading
   };
 
@@ -90,4 +73,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
+};

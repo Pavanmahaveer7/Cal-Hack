@@ -1,15 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiVolume2, FiVolumeX, FiCheck, FiX, FiRotateCcw, FiPlay } from 'react-icons/fi';
+import { useVoiceCommands } from '../hooks/useVoiceCommands';
 import './Learn.css';
 
 function Learn() {
+  const navigate = useNavigate();
   const [currentCard, setCurrentCard] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
-  const [studyMode, setStudyMode] = useState('flashcards'); // flashcards, multiple-choice, typing
+  const [studyMode, setStudyMode] = useState('flashcards');
   const [progress, setProgress] = useState(0);
 
-  // Sample vocabulary data - replace with API call
+  const handleVoiceCommand = useCallback((command) => {
+    switch (command.toLowerCase()) {
+      case 'go back':
+      case 'return home':
+        navigate('/');
+        break;
+      case 'next card':
+      case 'next':
+        handleNext();
+        break;
+      case 'previous card':
+      case 'previous':
+        handlePrevious();
+        break;
+      case 'show answer':
+      case 'answer':
+        setShowAnswer(true);
+        break;
+      case 'hide answer':
+        setShowAnswer(false);
+        break;
+      case 'repeat':
+        speakText(cards[currentCard]?.word || '');
+        break;
+      default:
+        console.log('Command not recognized:', command);
+    }
+  }, [navigate, currentCard]);
+
+  const { startListening, stopListening, isSupported } = useVoiceCommands({
+    onCommand: handleVoiceCommand
+  });
+
+  // Sample vocabulary data
   const [cards] = useState([
     {
       id: 1,
@@ -37,41 +73,11 @@ function Learn() {
       translation: 'Buenos días',
       language: 'Spanish',
       pronunciation: '/ˈbwe.nos ˈdi.as/',
-      example: 'Buenos días, señor García.',
-      exampleTranslation: 'Good morning, Mr. García.',
+      example: 'Buenos días, ¿cómo está usted?',
+      exampleTranslation: 'Good morning, how are you?',
       difficulty: 'beginner'
     }
   ]);
-
-  const [multipleChoiceOptions, setMultipleChoiceOptions] = useState([]);
-
-  useEffect(() => {
-    // Generate multiple choice options for current card
-    if (studyMode === 'multiple-choice' && cards.length > 0) {
-      const correctAnswer = cards[currentCard].translation;
-      const wrongAnswers = cards
-        .filter((_, index) => index !== currentCard)
-        .map(card => card.translation)
-        .slice(0, 3);
-      
-      const allOptions = [correctAnswer, ...wrongAnswers]
-        .sort(() => Math.random() - 0.5);
-      
-      setMultipleChoiceOptions(allOptions);
-    }
-  }, [currentCard, studyMode, cards]);
-
-  const speakText = (text, language = 'es') => {
-    if (!audioEnabled) return;
-    
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language;
-      utterance.rate = 0.8;
-      utterance.pitch = 1;
-      speechSynthesis.speak(utterance);
-    }
-  };
 
   const handleNext = () => {
     if (currentCard < cards.length - 1) {
@@ -89,56 +95,62 @@ function Learn() {
     }
   };
 
-  const handleAnswer = (isCorrect) => {
-    // Handle correct/incorrect answer
-    if (isCorrect) {
-      speakText('Correct!', 'en');
-    } else {
-      speakText('Try again', 'en');
+  const speakText = (text) => {
+    if (audioEnabled && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-ES';
+      speechSynthesis.speak(utterance);
     }
   };
 
-  const handleMultipleChoice = (selectedAnswer) => {
-    const isCorrect = selectedAnswer === cards[currentCard].translation;
-    handleAnswer(isCorrect);
-    setShowAnswer(true);
+  const handleCorrect = () => {
+    // Mark as correct and move to next
+    handleNext();
   };
 
-  const resetProgress = () => {
-    setCurrentCard(0);
-    setShowAnswer(false);
-    setProgress(0);
+  const handleIncorrect = () => {
+    // Mark as incorrect and show answer
+    setShowAnswer(true);
   };
 
   const currentCardData = cards[currentCard];
 
   return (
-    <div className="learn">
-      <div className="container">
-        <div className="learn-header">
-          <h1 className="learn-title">Learn New Words</h1>
-          <div className="learn-controls">
+    <div className="learn-container">
+      <div className="learn-header">
+        <h1 className="learn-title">Learning Mode</h1>
+        <div className="learn-controls">
+          <button
+            onClick={() => setAudioEnabled(!audioEnabled)}
+            className="audio-toggle"
+            aria-label={audioEnabled ? 'Disable audio' : 'Enable audio'}
+          >
+            {audioEnabled ? <FiVolume2 /> : <FiVolumeX />}
+          </button>
+          
+          {/* Voice Interface */}
+          <div className="voice-interface" role="region" aria-label="Voice Commands">
             <button
-              className={`control-button ${audioEnabled ? 'active' : ''}`}
-              onClick={() => setAudioEnabled(!audioEnabled)}
-              aria-label={audioEnabled ? 'Disable audio' : 'Enable audio'}
+              onClick={startListening}
+              disabled={!isSupported}
+              className="voice-button"
+              aria-label="Start voice recognition"
             >
-              {audioEnabled ? <FiVolume2 /> : <FiVolumeX />}
+              <FiVolume2 className="voice-icon" />
+              {isSupported ? 'Voice' : 'No Voice'}
             </button>
-            
-            <select
-              className="mode-selector"
-              value={studyMode}
-              onChange={(e) => setStudyMode(e.target.value)}
-              aria-label="Select study mode"
+            <button
+              onClick={stopListening}
+              className="voice-button stop"
+              aria-label="Stop voice recognition"
             >
-              <option value="flashcards">Flashcards</option>
-              <option value="multiple-choice">Multiple Choice</option>
-              <option value="typing">Typing Practice</option>
-            </select>
+              Stop
+            </button>
           </div>
         </div>
+      </div>
 
+      <div className="learn-content">
         {/* Progress Bar */}
         <div className="progress-section">
           <div className="progress-bar">
@@ -148,152 +160,112 @@ function Learn() {
               aria-label={`Progress: ${Math.round(progress)}%`}
             ></div>
           </div>
-          <div className="progress-text">
+          <span className="progress-text">
             Card {currentCard + 1} of {cards.length}
-          </div>
+          </span>
         </div>
 
-        {/* Study Card */}
-        <div className="study-card-container">
-          <div className="study-card">
-            <div className="card-header">
-              <span className="card-language">{currentCardData?.language}</span>
-              <span className="card-difficulty">{currentCardData?.difficulty}</span>
-            </div>
-
-            <div className="card-content">
-              {studyMode === 'flashcards' && (
-                <div className="flashcard-mode">
-                  <div className="card-word">
-                    <h2>{currentCardData?.word}</h2>
-                    <button
-                      className="pronunciation-button"
-                      onClick={() => speakText(currentCardData?.word, 'en')}
-                      aria-label="Pronounce word"
-                    >
-                      <FiPlay />
-                    </button>
-                  </div>
-                  
-                  {!showAnswer ? (
-                    <button
-                      className="reveal-button"
-                      onClick={() => setShowAnswer(true)}
-                    >
-                      Show Translation
-                    </button>
-                  ) : (
-                    <div className="card-answer">
-                      <div className="translation">
-                        <h3>{currentCardData?.translation}</h3>
-                        <span className="pronunciation">{currentCardData?.pronunciation}</span>
-                      </div>
-                      
-                      <div className="example">
-                        <p className="example-text">{currentCardData?.example}</p>
-                        <p className="example-translation">{currentCardData?.exampleTranslation}</p>
-                      </div>
-                      
-                      <div className="card-actions">
-                        <button
-                          className="action-button correct"
-                          onClick={() => handleAnswer(true)}
-                        >
-                          <FiCheck />
-                          Got it!
-                        </button>
-                        <button
-                          className="action-button incorrect"
-                          onClick={() => handleAnswer(false)}
-                        >
-                          <FiX />
-                          Need practice
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {studyMode === 'multiple-choice' && (
-                <div className="multiple-choice-mode">
-                  <h2 className="question">What does "{currentCardData?.word}" mean?</h2>
-                  
-                  <div className="options-grid">
-                    {multipleChoiceOptions.map((option, index) => (
-                      <button
-                        key={index}
-                        className={`option-button ${showAnswer && option === currentCardData?.translation ? 'correct' : ''}`}
-                        onClick={() => handleMultipleChoice(option)}
-                        disabled={showAnswer}
-                      >
-                        {option}
-                      </button>
-                    ))}
-                  </div>
-                  
-                  {showAnswer && (
-                    <div className="answer-feedback">
-                      <p className="feedback-text">
-                        {multipleChoiceOptions.includes(currentCardData?.translation) 
-                          ? 'Correct!' 
-                          : `The correct answer is: ${currentCardData?.translation}`
-                        }
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {studyMode === 'typing' && (
-                <div className="typing-mode">
-                  <h2>Type the translation for "{currentCardData?.word}"</h2>
-                  <input
-                    type="text"
-                    className="typing-input"
-                    placeholder="Type your answer here..."
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        const isCorrect = e.target.value.toLowerCase() === currentCardData?.translation.toLowerCase();
-                        handleAnswer(isCorrect);
-                        setShowAnswer(true);
-                      }
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="navigation">
+        {/* Study Mode Selector */}
+        <div className="mode-selector">
           <button
-            className="nav-button"
+            className={`mode-button ${studyMode === 'flashcards' ? 'active' : ''}`}
+            onClick={() => setStudyMode('flashcards')}
+          >
+            Flashcards
+          </button>
+          <button
+            className={`mode-button ${studyMode === 'multiple-choice' ? 'active' : ''}`}
+            onClick={() => setStudyMode('multiple-choice')}
+          >
+            Multiple Choice
+          </button>
+        </div>
+
+        {/* Card Content */}
+        <div className="card-container">
+          <div className="flashcard">
+            <div className="card-header">
+              <span className="card-language">{currentCardData.language}</span>
+              <span className="card-difficulty">{currentCardData.difficulty}</span>
+            </div>
+            
+            <div className="card-content">
+              <h2 className="card-word">{currentCardData.word}</h2>
+              {audioEnabled && (
+                <button
+                  onClick={() => speakText(currentCardData.word)}
+                  className="speak-button"
+                  aria-label="Pronounce word"
+                >
+                  <FiPlay />
+                </button>
+              )}
+            </div>
+
+            {showAnswer && (
+              <div className="card-answer">
+                <h3 className="answer-translation">{currentCardData.translation}</h3>
+                <p className="answer-pronunciation">{currentCardData.pronunciation}</p>
+                <div className="answer-example">
+                  <p className="example-text">{currentCardData.example}</p>
+                  <p className="example-translation">{currentCardData.exampleTranslation}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Card Controls */}
+        <div className="card-controls">
+          <button
             onClick={handlePrevious}
             disabled={currentCard === 0}
-            aria-label="Previous card"
-          >
-            Previous
-          </button>
-          
-          <button
-            className="nav-button reset"
-            onClick={resetProgress}
-            aria-label="Reset progress"
+            className="control-button"
           >
             <FiRotateCcw />
-            Reset
+            Previous
           </button>
-          
+
+          {!showAnswer ? (
+            <button
+              onClick={() => setShowAnswer(true)}
+              className="control-button primary"
+            >
+              Show Answer
+            </button>
+          ) : (
+            <div className="answer-controls">
+              <button
+                onClick={handleIncorrect}
+                className="control-button incorrect"
+              >
+                <FiX />
+                Incorrect
+              </button>
+              <button
+                onClick={handleCorrect}
+                className="control-button correct"
+              >
+                <FiCheck />
+                Correct
+              </button>
+            </div>
+          )}
+
           <button
-            className="nav-button"
             onClick={handleNext}
             disabled={currentCard === cards.length - 1}
-            aria-label="Next card"
+            className="control-button"
           >
             Next
           </button>
+        </div>
+
+        {/* Study Instructions */}
+        <div className="study-instructions">
+          <p className="instructions-text">
+            Use voice commands: "Show Answer", "Next Card", "Previous Card", "Repeat", or "Go Back"
+          </p>
         </div>
       </div>
     </div>

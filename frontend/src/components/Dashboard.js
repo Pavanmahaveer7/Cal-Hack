@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiBookOpen, FiAward, FiTrendingUp, FiClock, FiTarget, FiVolume2 } from 'react-icons/fi';
+import { useVoiceCommands } from '../hooks/useVoiceCommands';
 import './Dashboard.css';
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalCards: 0,
     masteredCards: 0,
@@ -12,6 +14,39 @@ function Dashboard() {
   });
 
   const [recentActivity, setRecentActivity] = useState([]);
+
+  const handleVoiceCommand = useCallback((command) => {
+    switch (command.toLowerCase()) {
+      case 'start learning':
+      case 'learn':
+        navigate('/learn');
+        break;
+      case 'take test':
+      case 'test':
+        navigate('/test');
+        break;
+      case 'upload pdf':
+      case 'upload document':
+        // For now, just show a message
+        alert('PDF upload feature coming soon!');
+        break;
+      case 'view profile':
+      case 'profile':
+        // For now, just show a message
+        alert('Profile feature coming soon!');
+        break;
+      case 'help':
+        // For now, just show a message
+        alert('Help feature coming soon!');
+        break;
+      default:
+        console.log('Command not recognized:', command);
+    }
+  }, [navigate]);
+
+  const { startListening, stopListening, isSupported } = useVoiceCommands({
+    onCommand: handleVoiceCommand
+  });
 
   useEffect(() => {
     // Simulate loading user data
@@ -61,6 +96,31 @@ function Dashboard() {
           <p className="dashboard-subtitle">
             Ready to continue your learning journey?
           </p>
+          
+          {/* Voice Interface */}
+          <div className="voice-interface" role="region" aria-label="Voice Commands">
+            <p className="voice-instructions">
+              Say "Start Learning", "Take Test", "Upload PDF", or "Help" to navigate
+            </p>
+            <div className="voice-controls">
+              <button
+                onClick={startListening}
+                disabled={!isSupported}
+                className="voice-button"
+                aria-label="Start voice recognition"
+              >
+                <FiVolume2 className="voice-icon" />
+                {isSupported ? 'Start Listening' : 'Voice Not Supported'}
+              </button>
+              <button
+                onClick={stopListening}
+                className="voice-button stop"
+                aria-label="Stop voice recognition"
+              >
+                Stop
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Stats Overview */}
@@ -69,7 +129,7 @@ function Dashboard() {
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon">
-                <FiBookOpen aria-hidden="true" />
+                <FiBookOpen />
               </div>
               <div className="stat-content">
                 <div className="stat-number">{stats.totalCards}</div>
@@ -79,7 +139,7 @@ function Dashboard() {
             
             <div className="stat-card">
               <div className="stat-icon">
-                <FiTarget aria-hidden="true" />
+                <FiAward />
               </div>
               <div className="stat-content">
                 <div className="stat-number">{stats.masteredCards}</div>
@@ -89,7 +149,7 @@ function Dashboard() {
             
             <div className="stat-card">
               <div className="stat-icon">
-                <FiClock aria-hidden="true" />
+                <FiTarget />
               </div>
               <div className="stat-content">
                 <div className="stat-number">{stats.currentStreak}</div>
@@ -99,7 +159,7 @@ function Dashboard() {
             
             <div className="stat-card">
               <div className="stat-icon">
-                <FiTrendingUp aria-hidden="true" />
+                <FiClock />
               </div>
               <div className="stat-content">
                 <div className="stat-number">{stats.studyTime}h</div>
@@ -119,20 +179,17 @@ function Dashboard() {
                 <Link
                   key={index}
                   to={action.link}
-                  className={`action-card action-card--${action.color}`}
-                  aria-describedby={`action-${index}-desc`}
+                  className={`action-card ${action.color}`}
+                  aria-describedby={`action-${index}-description`}
                 >
                   <div className="action-icon">
-                    <IconComponent aria-hidden="true" />
+                    <IconComponent />
                   </div>
                   <div className="action-content">
                     <h3 className="action-title">{action.title}</h3>
-                    <p id={`action-${index}-desc`} className="action-description">
+                    <p id={`action-${index}-description`} className="action-description">
                       {action.description}
                     </p>
-                  </div>
-                  <div className="action-arrow" aria-hidden="true">
-                    →
                   </div>
                 </Link>
               );
@@ -146,7 +203,7 @@ function Dashboard() {
           <div className="activity-list">
             {recentActivity.map((activity) => (
               <div key={activity.id} className="activity-item">
-                <div className="activity-icon">
+                <div className={`activity-icon ${activity.type}`}>
                   {activity.type === 'learned' ? <FiBookOpen /> : <FiAward />}
                 </div>
                 <div className="activity-content">
@@ -155,27 +212,6 @@ function Dashboard() {
                 </div>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* Audio Settings */}
-        <section className="settings-section" aria-labelledby="settings-heading">
-          <h2 id="settings-heading" className="section-title">Audio Settings</h2>
-          <div className="settings-card">
-            <div className="setting-item">
-              <div className="setting-content">
-                <FiVolume2 className="setting-icon" aria-hidden="true" />
-                <div>
-                  <h3 className="setting-title">Audio Feedback</h3>
-                  <p className="setting-description">
-                    Enable sound effects and voice narration
-                  </p>
-                </div>
-              </div>
-              <button className="toggle-button" aria-pressed="true">
-                <span className="toggle-slider"></span>
-              </button>
-            </div>
           </div>
         </section>
       </div>

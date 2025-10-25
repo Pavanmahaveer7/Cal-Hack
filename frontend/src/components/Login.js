@@ -1,187 +1,106 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
+import toast from 'react-hot-toast';
 import './Login.css';
 
 function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
-  const { login, loading } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const emailRef = useRef(null);
-
-  useEffect(() => {
-    // Focus on email input when component mounts
-    if (emailRef.current) {
-      emailRef.current.focus();
-    }
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+    setLoading(true);
 
-    const result = await login(formData.email, formData.password);
-    if (result.success) {
-      navigate('/dashboard');
+    try {
+      const result = await login(email, password);
+      if (result.success) {
+        toast.success('Login successful!');
+        navigate('/');
+      } else {
+        toast.error(result.error || 'Login failed');
+      }
+    } catch (error) {
+      toast.error('An error occurred during login');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e);
-    }
+  const handleDemoLogin = () => {
+    setEmail('demo@braillience.com');
+    setPassword('demo123');
+    handleSubmit({ preventDefault: () => {} });
   };
 
   return (
     <div className="login-container">
       <div className="login-card">
-        <div className="login-header">
-          <h1 className="login-title">
-            Welcome to Braillience
-          </h1>
-          <p className="login-subtitle">
-            Accessible learning for everyone
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="login-form" noValidate>
+        <h1 className="login-title">Welcome to Braillience</h1>
+        <p className="login-subtitle">Accessible flashcard learning for blind college students</p>
+        
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="email" className="form-label">
               Email Address
             </label>
-            <div className="input-wrapper">
-              <FiMail className="input-icon" aria-hidden="true" />
-              <input
-                ref={emailRef}
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                className={`form-input ${errors.email ? 'error' : ''}`}
-                placeholder="Enter your email"
-                autoComplete="email"
-                aria-describedby={errors.email ? 'email-error' : undefined}
-                aria-invalid={!!errors.email}
-                required
-              />
-            </div>
-            {errors.email && (
-              <div id="email-error" className="error-message" role="alert">
-                {errors.email}
-              </div>
-            )}
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input"
+              required
+              aria-describedby="email-help"
+            />
+            <small id="email-help" className="form-help">
+              Enter your email address
+            </small>
           </div>
 
           <div className="form-group">
             <label htmlFor="password" className="form-label">
               Password
             </label>
-            <div className="input-wrapper">
-              <FiLock className="input-icon" aria-hidden="true" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                className={`form-input ${errors.password ? 'error' : ''}`}
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                aria-describedby={errors.password ? 'password-error' : undefined}
-                aria-invalid={!!errors.password}
-                required
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                tabIndex="0"
-              >
-                {showPassword ? <FiEyeOff /> : <FiEye />}
-              </button>
-            </div>
-            {errors.password && (
-              <div id="password-error" className="error-message" role="alert">
-                {errors.password}
-              </div>
-            )}
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+              required
+              aria-describedby="password-help"
+            />
+            <small id="password-help" className="form-help">
+              Enter your password
+            </small>
           </div>
 
           <button
             type="submit"
-            className="login-button"
             disabled={loading}
-            aria-describedby="login-status"
+            className="login-button"
+            aria-describedby="login-help"
           >
-            {loading ? (
-              <>
-                <div className="button-spinner" aria-hidden="true"></div>
-                Signing in...
-              </>
-            ) : (
-              'Sign In'
-            )}
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
-          
-          <div id="login-status" className="sr-only" aria-live="polite">
-            {loading ? 'Signing in, please wait...' : 'Ready to sign in'}
-          </div>
+          <small id="login-help" className="form-help">
+            Use any email and password for demo
+          </small>
         </form>
 
-        <div className="login-footer">
-          <p className="demo-credentials">
-            <strong>Demo Credentials:</strong><br />
-            Email: demo@braillience.com<br />
-            Password: demo123
-          </p>
+        <div className="demo-section">
+          <p className="demo-text">For demo purposes:</p>
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="demo-button"
+          >
+            Use Demo Account
+          </button>
         </div>
       </div>
     </div>

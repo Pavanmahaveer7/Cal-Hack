@@ -1,284 +1,174 @@
-import React, { useState, useEffect } from 'react';
-import { FiCheck, FiX, FiRotateCcw, FiVolume2, FiVolumeX, FiAward, FiClock } from 'react-icons/fi';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FiVolume2, FiCheck, FiX, FiRotateCcw, FiPlay } from 'react-icons/fi';
+import { useVoiceCommands } from '../hooks/useVoiceCommands';
 import './Test.css';
 
 function Test() {
+  const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(30);
-  const [testStarted, setTestStarted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
   const [testCompleted, setTestCompleted] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(true);
-  const [testMode, setTestMode] = useState('timed'); // timed, practice, speed
 
-  // Sample test questions - replace with API call
+  const handleVoiceCommand = useCallback((command) => {
+    switch (command.toLowerCase()) {
+      case 'go back':
+      case 'return home':
+        navigate('/');
+        break;
+      case 'next question':
+      case 'next':
+        handleNext();
+        break;
+      case 'previous question':
+      case 'previous':
+        handlePrevious();
+        break;
+      case 'select a':
+      case 'option a':
+        handleAnswer(0);
+        break;
+      case 'select b':
+      case 'option b':
+        handleAnswer(1);
+        break;
+      case 'select c':
+      case 'option c':
+        handleAnswer(2);
+        break;
+      case 'select d':
+      case 'option d':
+        handleAnswer(3);
+        break;
+      default:
+        console.log('Command not recognized:', command);
+    }
+  }, [navigate, currentQuestion]);
+
+  const { startListening, stopListening, isSupported } = useVoiceCommands({
+    onCommand: handleVoiceCommand
+  });
+
+  // Sample test questions
   const [questions] = useState([
     {
       id: 1,
-      question: 'What does "Hola" mean in English?',
-      options: ['Hello', 'Goodbye', 'Thank you', 'Please'],
-      correct: 'Hello',
-      explanation: 'Hola is the Spanish word for Hello.',
-      difficulty: 'beginner'
+      question: 'What is the Spanish word for "Hello"?',
+      options: ['Hola', 'Adiós', 'Gracias', 'Por favor'],
+      correct: 0,
+      explanation: 'Hola is the Spanish word for Hello.'
     },
     {
       id: 2,
       question: 'What does "Gracias" mean in English?',
-      options: ['Hello', 'Goodbye', 'Thank you', 'Please'],
-      correct: 'Thank you',
-      explanation: 'Gracias is the Spanish word for Thank you.',
-      difficulty: 'beginner'
+      options: ['Please', 'Thank you', 'Goodbye', 'Hello'],
+      correct: 1,
+      explanation: 'Gracias means Thank you in English.'
     },
     {
       id: 3,
-      question: 'What does "Buenos días" mean in English?',
-      options: ['Good evening', 'Good morning', 'Good night', 'Good afternoon'],
-      correct: 'Good morning',
-      explanation: 'Buenos días is the Spanish phrase for Good morning.',
-      difficulty: 'beginner'
-    },
-    {
-      id: 4,
-      question: 'What does "Adiós" mean in English?',
-      options: ['Hello', 'Goodbye', 'Thank you', 'Please'],
-      correct: 'Goodbye',
-      explanation: 'Adiós is the Spanish word for Goodbye.',
-      difficulty: 'beginner'
-    },
-    {
-      id: 5,
-      question: 'What does "Por favor" mean in English?',
-      options: ['Thank you', 'Please', 'You\'re welcome', 'Excuse me'],
-      correct: 'Please',
-      explanation: 'Por favor is the Spanish phrase for Please.',
-      difficulty: 'beginner'
+      question: 'How do you say "Good morning" in Spanish?',
+      options: ['Buenas tardes', 'Buenos días', 'Buenas noches', 'Hola'],
+      correct: 1,
+      explanation: 'Buenos días means Good morning in Spanish.'
     }
   ]);
 
-  const [shuffledQuestions, setShuffledQuestions] = useState([]);
-
   useEffect(() => {
-    // Shuffle questions for each test
-    const shuffled = [...questions].sort(() => Math.random() - 0.5);
-    setShuffledQuestions(shuffled);
-  }, []);
-
-  useEffect(() => {
-    let timer;
-    if (testStarted && !testCompleted && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    } else if (timeLeft === 0 && testStarted) {
-      handleTestComplete();
+    if (timeLeft > 0 && !testCompleted) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      setTestCompleted(true);
     }
-    return () => clearTimeout(timer);
-  }, [timeLeft, testStarted, testCompleted]);
+  }, [timeLeft, testCompleted]);
 
-  const speakText = (text, language = 'en') => {
-    if (!audioEnabled) return;
+  const handleAnswer = (answerIndex) => {
+    if (selectedAnswer !== null) return;
     
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language;
-      utterance.rate = 0.8;
-      utterance.pitch = 1;
-      speechSynthesis.speak(utterance);
-    }
-  };
-
-  const startTest = () => {
-    setTestStarted(true);
-    setCurrentQuestion(0);
-    setScore(0);
-    setTimeLeft(30);
-    setTestCompleted(false);
-    setSelectedAnswer('');
-    setShowResult(false);
-    speakText('Test started. Good luck!');
-  };
-
-  const handleAnswerSelect = (answer) => {
-    if (showResult) return;
-    
-    setSelectedAnswer(answer);
-    speakText(answer);
-  };
-
-  const submitAnswer = () => {
-    if (!selectedAnswer) return;
-
-    const isCorrect = selectedAnswer === shuffledQuestions[currentQuestion].correct;
-    if (isCorrect) {
-      setScore(score + 1);
-      speakText('Correct!');
-    } else {
-      speakText('Incorrect. The correct answer is ' + shuffledQuestions[currentQuestion].correct);
-    }
-
+    setSelectedAnswer(answerIndex);
     setShowResult(true);
+    
+    if (answerIndex === questions[currentQuestion].correct) {
+      setScore(score + 1);
+    }
   };
 
-  const nextQuestion = () => {
-    if (currentQuestion < shuffledQuestions.length - 1) {
+  const handleNext = () => {
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer('');
+      setSelectedAnswer(null);
       setShowResult(false);
     } else {
-      handleTestComplete();
+      setTestCompleted(true);
     }
   };
 
-  const handleTestComplete = () => {
-    setTestCompleted(true);
-    setTestStarted(false);
-    const percentage = Math.round((score / shuffledQuestions.length) * 100);
-    speakText(`Test completed. You scored ${score} out of ${shuffledQuestions.length}. That's ${percentage} percent.`);
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+    }
   };
 
-  const resetTest = () => {
-    setTestStarted(false);
-    setTestCompleted(false);
-    setCurrentQuestion(0);
-    setScore(0);
-    setTimeLeft(30);
-    setSelectedAnswer('');
-    setShowResult(false);
-    // Reshuffle questions
-    const shuffled = [...questions].sort(() => Math.random() - 0.5);
-    setShuffledQuestions(shuffled);
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getScoreMessage = () => {
-    const percentage = Math.round((score / shuffledQuestions.length) * 100);
-    if (percentage >= 90) return { message: 'Excellent!', color: 'success' };
-    if (percentage >= 70) return { message: 'Good job!', color: 'warning' };
-    if (percentage >= 50) return { message: 'Not bad!', color: 'warning' };
-    return { message: 'Keep practicing!', color: 'error' };
-  };
-
-  const currentQ = shuffledQuestions[currentQuestion];
-
-  if (!testStarted && !testCompleted) {
-    return (
-      <div className="test">
-        <div className="container">
-          <div className="test-header">
-            <h1 className="test-title">Test Yourself</h1>
-            <p className="test-subtitle">
-              Challenge your knowledge with interactive quizzes
-            </p>
-          </div>
-
-          <div className="test-setup">
-            <div className="setup-card">
-              <h2>Test Configuration</h2>
-              
-              <div className="setup-options">
-                <div className="option-group">
-                  <label className="option-label">Test Mode</label>
-                  <select
-                    className="option-select"
-                    value={testMode}
-                    onChange={(e) => setTestMode(e.target.value)}
-                    aria-label="Select test mode"
-                  >
-                    <option value="timed">Timed Test (30 seconds per question)</option>
-                    <option value="practice">Practice Mode (No time limit)</option>
-                    <option value="speed">Speed Test (10 seconds per question)</option>
-                  </select>
-                </div>
-
-                <div className="option-group">
-                  <label className="option-label">Audio Settings</label>
-                  <div className="audio-toggle">
-                    <button
-                      className={`toggle-button ${audioEnabled ? 'active' : ''}`}
-                      onClick={() => setAudioEnabled(!audioEnabled)}
-                      aria-label={audioEnabled ? 'Disable audio' : 'Enable audio'}
-                    >
-                      {audioEnabled ? <FiVolume2 /> : <FiVolumeX />}
-                    </button>
-                    <span className="toggle-label">
-                      {audioEnabled ? 'Audio enabled' : 'Audio disabled'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="test-info">
-                <div className="info-item">
-                  <FiClock className="info-icon" />
-                  <span>Questions: {shuffledQuestions.length}</span>
-                </div>
-                <div className="info-item">
-                  <FiAward className="info-icon" />
-                  <span>Time: {testMode === 'speed' ? '10s' : testMode === 'timed' ? '30s' : '∞'} per question</span>
-                </div>
-              </div>
-
-              <button
-                className="start-button"
-                onClick={startTest}
-                aria-label="Start test"
-              >
-                Start Test
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const currentQuestionData = questions[currentQuestion];
+  const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   if (testCompleted) {
-    const scoreData = getScoreMessage();
+    const percentage = Math.round((score / questions.length) * 100);
     
     return (
-      <div className="test">
-        <div className="container">
-          <div className="test-results">
-            <div className="results-card">
-              <div className="results-header">
-                <h2>Test Completed!</h2>
-                <div className={`score-badge ${scoreData.color}`}>
-                  {Math.round((score / shuffledQuestions.length) * 100)}%
-                </div>
-              </div>
-
-              <div className="results-content">
-                <div className="score-details">
-                  <div className="score-item">
-                    <span className="score-label">Correct Answers</span>
-                    <span className="score-value">{score} / {shuffledQuestions.length}</span>
-                  </div>
-                  <div className="score-item">
-                    <span className="score-label">Accuracy</span>
-                    <span className="score-value">{Math.round((score / shuffledQuestions.length) * 100)}%</span>
-                  </div>
-                </div>
-
-                <div className={`score-message ${scoreData.color}`}>
-                  {scoreData.message}
-                </div>
-
-                <div className="results-actions">
-                  <button
-                    className="action-button primary"
-                    onClick={resetTest}
-                  >
-                    <FiRotateCcw />
-                    Try Again
-                  </button>
-                  <button
-                    className="action-button secondary"
-                    onClick={() => window.location.href = '/learn'}
-                  >
-                    Learn More
-                  </button>
-                </div>
-              </div>
+      <div className="test-container">
+        <div className="test-results">
+          <h1 className="results-title">Test Completed!</h1>
+          <div className="results-stats">
+            <div className="stat-item">
+              <span className="stat-label">Score</span>
+              <span className="stat-value">{score}/{questions.length}</span>
             </div>
+            <div className="stat-item">
+              <span className="stat-label">Percentage</span>
+              <span className="stat-value">{percentage}%</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Time Left</span>
+              <span className="stat-value">{formatTime(timeLeft)}</span>
+            </div>
+          </div>
+          
+          <div className="results-message">
+            {percentage >= 80 ? (
+              <p className="success-message">Excellent work! You've mastered this material.</p>
+            ) : percentage >= 60 ? (
+              <p className="good-message">Good job! Keep practicing to improve.</p>
+            ) : (
+              <p className="improve-message">Keep studying! Practice makes perfect.</p>
+            )}
+          </div>
+          
+          <div className="results-actions">
+            <button
+              onClick={() => navigate('/')}
+              className="action-button primary"
+            >
+              Back to Dashboard
+            </button>
+            <button
+              onClick={() => window.location.reload()}
+              className="action-button secondary"
+            >
+              Retake Test
+            </button>
           </div>
         </div>
       </div>
@@ -286,85 +176,105 @@ function Test() {
   }
 
   return (
-    <div className="test">
-      <div className="container">
-        <div className="test-header">
-          <div className="test-progress">
-            <div className="progress-info">
-              <span>Question {currentQuestion + 1} of {shuffledQuestions.length}</span>
-              <span className="score-display">Score: {score}</span>
-            </div>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
-              ></div>
-            </div>
+    <div className="test-container">
+      <div className="test-header">
+        <h1 className="test-title">Test Mode</h1>
+        <div className="test-info">
+          <span className="time-remaining">Time: {formatTime(timeLeft)}</span>
+          <span className="question-counter">
+            Question {currentQuestion + 1} of {questions.length}
+          </span>
+        </div>
+      </div>
+
+      <div className="test-content">
+        {/* Progress Bar */}
+        <div className="progress-section">
+          <div className="progress-bar">
+            <div 
+              className="progress-fill" 
+              style={{ width: `${progress}%` }}
+              aria-label={`Progress: ${Math.round(progress)}%`}
+            ></div>
+          </div>
+        </div>
+
+        {/* Voice Interface */}
+        <div className="voice-interface" role="region" aria-label="Voice Commands">
+          <p className="voice-instructions">
+            Say "Select A", "Select B", "Select C", "Select D", "Next Question", or "Previous Question"
+          </p>
+          <div className="voice-controls">
+            <button
+              onClick={startListening}
+              disabled={!isSupported}
+              className="voice-button"
+              aria-label="Start voice recognition"
+            >
+              <FiVolume2 className="voice-icon" />
+              {isSupported ? 'Start Listening' : 'Voice Not Supported'}
+            </button>
+            <button
+              onClick={stopListening}
+              className="voice-button stop"
+              aria-label="Stop voice recognition"
+            >
+              Stop
+            </button>
+          </div>
+        </div>
+
+        {/* Question */}
+        <div className="question-container">
+          <h2 className="question-text">{currentQuestionData.question}</h2>
+          
+          <div className="options-container">
+            {currentQuestionData.options.map((option, index) => {
+              const isSelected = selectedAnswer === index;
+              const isCorrect = index === currentQuestionData.correct;
+              const isWrong = isSelected && !isCorrect;
+              
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleAnswer(index)}
+                  disabled={selectedAnswer !== null}
+                  className={`option-button ${isSelected ? 'selected' : ''} ${showResult && isCorrect ? 'correct' : ''} ${isWrong ? 'incorrect' : ''}`}
+                >
+                  <span className="option-label">{String.fromCharCode(65 + index)}</span>
+                  <span className="option-text">{option}</span>
+                  {showResult && isCorrect && <FiCheck className="option-icon" />}
+                  {isWrong && <FiX className="option-icon" />}
+                </button>
+              );
+            })}
           </div>
 
-          {testMode !== 'practice' && (
-            <div className="timer">
-              <FiClock className="timer-icon" />
-              <span className="timer-text">{timeLeft}s</span>
+          {showResult && (
+            <div className="explanation">
+              <p className="explanation-text">{currentQuestionData.explanation}</p>
             </div>
           )}
         </div>
 
-        <div className="question-card">
-          <div className="question-header">
-            <span className="difficulty-badge">{currentQ?.difficulty}</span>
-            <span className="question-number">Question {currentQuestion + 1}</span>
-          </div>
+        {/* Navigation */}
+        <div className="test-navigation">
+          <button
+            onClick={handlePrevious}
+            disabled={currentQuestion === 0}
+            className="nav-button"
+          >
+            <FiRotateCcw />
+            Previous
+          </button>
 
-          <div className="question-content">
-            <h2 className="question-text">{currentQ?.question}</h2>
-
-            <div className="options-container">
-              {currentQ?.options.map((option, index) => (
-                <button
-                  key={index}
-                  className={`option-button ${selectedAnswer === option ? 'selected' : ''} ${
-                    showResult ? (option === currentQ?.correct ? 'correct' : selectedAnswer === option ? 'incorrect' : '') : ''
-                  }`}
-                  onClick={() => handleAnswerSelect(option)}
-                  disabled={showResult}
-                >
-                  <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-                  <span className="option-text">{option}</span>
-                </button>
-              ))}
-            </div>
-
-            {!showResult ? (
-              <button
-                className="submit-button"
-                onClick={submitAnswer}
-                disabled={!selectedAnswer}
-              >
-                Submit Answer
-              </button>
-            ) : (
-              <div className="answer-feedback">
-                <div className="feedback-content">
-                  <div className={`feedback-icon ${selectedAnswer === currentQ?.correct ? 'correct' : 'incorrect'}`}>
-                    {selectedAnswer === currentQ?.correct ? <FiCheck /> : <FiX />}
-                  </div>
-                  <div className="feedback-text">
-                    <p className="feedback-result">
-                      {selectedAnswer === currentQ?.correct ? 'Correct!' : 'Incorrect!'}
-                    </p>
-                    <p className="feedback-explanation">{currentQ?.explanation}</p>
-                  </div>
-                </div>
-                <button
-                  className="next-button"
-                  onClick={nextQuestion}
-                >
-                  {currentQuestion < shuffledQuestions.length - 1 ? 'Next Question' : 'Finish Test'}
-                </button>
-              </div>
-            )}
-          </div>
+          <button
+            onClick={handleNext}
+            className="nav-button primary"
+            disabled={selectedAnswer === null}
+          >
+            {currentQuestion === questions.length - 1 ? 'Finish Test' : 'Next Question'}
+          </button>
         </div>
       </div>
     </div>
