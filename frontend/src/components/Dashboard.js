@@ -43,15 +43,34 @@ function Dashboard() {
         alert('Profile feature coming soon!');
         break;
       case 'help':
-        // For now, just show a message
-        alert('Help feature coming soon!');
+        speakText('You can say "Start Learning", "Take Test", "Upload PDF", "Study Flashcards", "Voice Learning", "Stop Listening", "Start Listening", or "View Profile".');
+        break;
+      case 'stop listening':
+      case 'stop voice':
+      case 'disable voice':
+        disableContinuousListening();
+        speakText('Voice listening has been disabled. Say "Start Listening" to re-enable.');
+        break;
+      case 'start listening':
+      case 'enable voice':
+      case 'begin listening':
+        enableContinuousListening();
+        speakText('Voice listening has been enabled. I am now listening continuously.');
         break;
       default:
         console.log('Command not recognized:', command);
     }
   }, [navigate]);
 
-  const { startListening, stopListening, isSupported } = useVoiceCommands({
+  const { 
+    startListening, 
+    stopListening, 
+    disableContinuousListening,
+    enableContinuousListening,
+    isSupported, 
+    isListening,
+    isEnabled 
+  } = useVoiceCommands({
     onCommand: handleVoiceCommand
   });
 
@@ -79,13 +98,20 @@ function Dashboard() {
       link: '/upload',
       color: 'primary'
     },
-    {
-      title: 'Voice Learning',
-      description: 'Study with AI voice conversation',
-      icon: FiVolume2,
-      link: '/voice-learning',
-      color: 'secondary'
-    },
+            {
+              title: 'Voice Learning',
+              description: 'Study with AI voice conversation',
+              icon: FiVolume2,
+              link: '/voice-learning',
+              color: 'secondary'
+            },
+            {
+              title: 'AI Teacher Call',
+              description: 'Get a personal AI teacher call',
+              icon: FiVolume2,
+              link: '/vapi-teacher',
+              color: 'accent'
+            },
     {
       title: 'Study Flashcards',
       description: 'Study your generated flashcards',
@@ -107,25 +133,26 @@ function Dashboard() {
           {/* Voice Interface */}
           <div className="voice-interface" role="region" aria-label="Voice Commands">
             <p className="voice-instructions">
-              Say "Voice Learning", "Study Flashcards", "Upload PDF", or "Help" to navigate
+              {isEnabled ? 
+                '🎤 Continuous listening active! Say "Voice Learning", "Study Flashcards", "Upload PDF", "Stop Listening", or "Help"' :
+                'Voice listening is disabled. Say "Start Listening" to enable continuous voice commands.'
+              }
             </p>
             <div className="voice-controls">
               <button
-                onClick={startListening}
+                onClick={isEnabled ? disableContinuousListening : enableContinuousListening}
                 disabled={!isSupported}
-                className="voice-button"
-                aria-label="Start voice recognition"
+                className={`voice-button ${isEnabled ? 'stop' : 'start'}`}
+                aria-label={isEnabled ? 'Disable continuous voice recognition' : 'Enable continuous voice recognition'}
               >
                 <FiVolume2 className="voice-icon" />
-                {isSupported ? 'Start Listening' : 'Voice Not Supported'}
+                {isSupported ? (isEnabled ? 'Disable Voice' : 'Enable Voice') : 'Voice Not Supported'}
               </button>
-              <button
-                onClick={stopListening}
-                className="voice-button stop"
-                aria-label="Stop voice recognition"
-              >
-                Stop
-              </button>
+              <div className="voice-status">
+                <span className={`status-indicator ${isEnabled ? 'active' : 'inactive'}`}>
+                  {isEnabled ? '🟢 Listening' : '🔴 Disabled'}
+                </span>
+              </div>
             </div>
           </div>
         </div>

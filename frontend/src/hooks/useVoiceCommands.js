@@ -2,14 +2,17 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 export const useVoiceCommands = ({
   onCommand,
-  continuous = false,
+  continuous = true, // Always continuous for accessibility
   interimResults = true,
-  maxAlternatives = 1
+  maxAlternatives = 1,
+  autoRestart = true // Auto-restart when recognition ends
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState(null);
+  const [isEnabled, setIsEnabled] = useState(true); // Control continuous listening
   const recognitionRef = useRef(null);
+  const restartTimeoutRef = useRef(null);
   const isSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -62,6 +65,16 @@ export const useVoiceCommands = ({
 
       recognition.onend = () => {
         setIsListening(false);
+        
+        // Auto-restart if enabled and not manually stopped
+        if (autoRestart && isEnabled) {
+          restartTimeoutRef.current = setTimeout(() => {
+            if (isEnabled) {
+              console.log('🔄 Auto-restarting voice recognition...');
+              startListening();
+            }
+          }, 1000); // 1 second delay before restart
+        }
       };
 
       recognitionRef.current = recognition;
@@ -77,13 +90,32 @@ export const useVoiceCommands = ({
       recognitionRef.current.stop();
       recognitionRef.current = null;
     }
+    if (restartTimeoutRef.current) {
+      clearTimeout(restartTimeoutRef.current);
+      restartTimeoutRef.current = null;
+    }
     setIsListening(false);
   }, []);
+
+  const disableContinuousListening = useCallback(() => {
+    setIsEnabled(false);
+    stopListening();
+    console.log('🛑 Continuous voice listening disabled');
+  }, [stopListening]);
+
+  const enableContinuousListening = useCallback(() => {
+    setIsEnabled(true);
+    console.log('🎤 Continuous voice listening enabled');
+    startListening();
+  }, [startListening]);
 
   useEffect(() => {
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
+      }
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
       }
     };
   }, []);
@@ -91,7 +123,10 @@ export const useVoiceCommands = ({
   return {
     startListening,
     stopListening,
+    disableContinuousListening,
+    enableContinuousListening,
     isListening,
+    isEnabled,
     isSupported,
     transcript,
     error

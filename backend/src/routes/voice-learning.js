@@ -5,6 +5,37 @@ const aiService = require('../services/aiService')
 
 const router = express.Router()
 
+// Get flashcards for voice learning
+router.get('/flashcards/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params
+    
+    // Get all flashcards for the user
+    const documents = await dbService.getDocuments(userId)
+    let allFlashcards = []
+    
+    for (const doc of documents) {
+      const docFlashcards = await dbService.getFlashcards(userId, doc.id)
+      allFlashcards = allFlashcards.concat(docFlashcards)
+    }
+
+    res.json({
+      success: true,
+      data: {
+        flashcards: allFlashcards,
+        total: allFlashcards.length
+      }
+    })
+  } catch (error) {
+    console.error('Error fetching flashcards for voice learning:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch flashcards',
+      message: error.message
+    })
+  }
+})
+
 // Test VAPI integration
 router.post('/test-vapi', async (req, res) => {
   try {
@@ -245,6 +276,153 @@ router.get('/test', async (req, res) => {
       success: false,
       error: 'Failed to test VAPI connection',
       message: error.message
+    })
+  }
+})
+
+// Process user input through VAPI
+router.post('/process', async (req, res) => {
+  try {
+    const { userId, userInput, sessionId, currentFlashcard } = req.body
+
+    console.log(`🎤 Processing user input for ${userId}:`, userInput)
+
+    // Get available flashcards for the user
+    const flashcards = await dbService.getFlashcards(userId, null)
+    
+    if (flashcards.length === 0) {
+      return res.json({
+        success: true,
+        data: {
+          response: "No flashcards available. Please upload a PDF first to generate flashcards.",
+          nextFlashcard: null,
+          progress: null
+        }
+      })
+    }
+
+    // Create VAPI assistant response
+    const vapiResponse = await vapiService.processUserInput({
+      userId,
+      userInput,
+      sessionId,
+      currentFlashcard,
+      availableFlashcards: flashcards
+    })
+
+    res.json({
+      success: true,
+      data: vapiResponse
+    })
+
+  } catch (error) {
+    console.error('Error processing user input:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to process user input',
+      message: error.message
+    })
+  }
+})
+
+// Start teacher call - real VAPI call
+router.post('/start-teacher-call', async (req, res) => {
+  try {
+    const { userId, phoneNumber, documentId, mode } = req.body
+
+    if (!userId || !phoneNumber || !documentId) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'User ID, phone number, and document ID are required' 
+      })
+    }
+
+    console.log('🎓 Starting teacher call for user:', userId)
+    console.log('📞 Phone number:', phoneNumber)
+    console.log('📚 Document ID:', documentId)
+
+    // Get document content
+    const document = await dbService.getDocument(documentId, userId)
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        error: 'Document not found'
+      })
+    }
+
+    // Get flashcards for the document
+    const flashcards = await dbService.getFlashcards(userId, documentId)
+
+    // Create teacher call with VAPI
+    const teacherCall = await vapiService.createTeacherCall({
+      userId,
+      phoneNumber,
+      document: document,
+      flashcards: flashcards,
+      mode: mode || 'teacher'
+    })
+
+    if (teacherCall.success) {
+      res.json({
+        success: true,
+        message: 'Teacher call started successfully',
+        data: {
+          callId: teacherCall.data.callId,
+          phoneNumber: phoneNumber,
+          documentName: document.originalName,
+          flashcardCount: flashcards.length,
+          status: 'active'
+        }
+      })
+    } else {
+      res.status(500).json({
+        success: false,
+        error: teacherCall.error || 'Failed to start teacher call'
+      })
+    }
+  } catch (error) {
+    console.error('Error starting teacher call:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to start teacher call'
+    })
+  }
+})
+
+// End teacher call
+router.post('/end-teacher-call', async (req, res) => {
+  try {
+    const { callId } = req.body
+
+    if (!callId) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Call ID is required' 
+      })
+    }
+
+    console.log('🛑 Ending teacher call:', callId)
+
+    // End the VAPI call
+    const result = await vapiService.endCall(callId)
+
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Teacher call ended successfully',
+        data: result.data
+      })
+    } else {
+      res.status(500).json({
+        success: false,
+        error: result.error || 'Failed to end teacher call'
+      })
+    }
+  } catch (error) {
+    console.error('Error ending teacher call:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to end teacher call'
     })
   }
 })
