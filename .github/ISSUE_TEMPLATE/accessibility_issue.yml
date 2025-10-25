@@ -1,0 +1,154 @@
+name: ♿ Accessibility Issue
+description: Report an accessibility barrier or improvement
+title: "[A11y]: "
+labels: ["accessibility", "bug"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an accessibility issue! This helps us make Cal-Hack more inclusive for all users.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: ♿ Accessibility Issue Description
+      description: A clear description of the accessibility barrier or issue.
+      placeholder: Describe the accessibility issue...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: wcag-level
+    attributes:
+      label: 📋 WCAG Level
+      description: Which WCAG level does this relate to?
+      options:
+        - Level A (Basic accessibility)
+        - Level AA (Standard accessibility)
+        - Level AAA (Enhanced accessibility)
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: principle
+    attributes:
+      label: 🎯 WCAG Principle
+      description: Which WCAG principle is affected?
+      options:
+        - Perceivable - Information must be presentable in ways users can perceive
+        - Operable - Interface components must be operable
+        - Understandable - Information and UI operation must be understandable
+        - Robust - Content must be robust enough for various assistive technologies
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 🔄 Steps to Reproduce
+      description: How can we reproduce this accessibility issue?
+      placeholder: |
+        1. Navigate to...
+        2. Use screen reader to...
+        3. Notice that...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: assistive-technology
+    attributes:
+      label: 🛠️ Assistive Technology
+      description: Which assistive technology were you using?
+      options:
+        - NVDA (Windows)
+        - JAWS (Windows)
+        - VoiceOver (macOS)
+        - VoiceOver (iOS)
+        - TalkBack (Android)
+        - Orca (Linux)
+        - Dragon NaturallySpeaking
+        - Switch control
+        - Eye tracking
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 🌐 Browser
+      description: Which browser were you using?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: 📱 Device
+      description: What device were you using?
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 💥 Impact Description
+      description: How does this issue impact users with disabilities?
+      placeholder: This issue prevents users from...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: ✅ Expected Accessible Behavior
+      description: What should happen for accessibility?
+      placeholder: The screen reader should announce...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: 🔧 Suggested Fix
+      description: Do you have any suggestions for how to fix this?
+      placeholder: Consider adding ARIA labels, improving keyboard navigation, etc.
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: 🧪 Testing Performed
+      description: What testing have you done?
+      options:
+        - label: Tested with screen reader
+          required: true
+        - label: Tested keyboard-only navigation
+          required: true
+        - label: Tested with high contrast mode
+        - label: Tested with zoom up to 200%
+        - label: Tested on mobile device
+        - label: Tested with voice control
+        - label: Verified ARIA attributes
+        - label: Checked color contrast ratios
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📝 Additional Context
+      description: Any other information that might be helpful?
+      placeholder: Screenshots, error messages, or other details...

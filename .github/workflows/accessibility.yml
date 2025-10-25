@@ -1,0 +1,93 @@
+name: Accessibility Testing
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 1' # Weekly accessibility audit
+
+jobs:
+  accessibility-testing:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build project
+      run: npm run build
+    
+    - name: Install Playwright
+      run: npm install -D @playwright/test
+    
+    - name: Install Playwright browsers
+      run: npx playwright install
+    
+    - name: Run accessibility tests with axe-core
+      run: npm run test:accessibility
+    
+    - name: Run screen reader simulation tests
+      run: npm run test:screen-reader
+    
+    - name: Test keyboard navigation
+      run: npm run test:keyboard
+    
+    - name: Generate accessibility report
+      run: npm run report:a11y
+    
+    - name: Upload accessibility report
+      uses: actions/upload-artifact@v3
+      with:
+        name: accessibility-report
+        path: ./accessibility-report/
+        retention-days: 30
+
+  lighthouse-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build project
+      run: npm run build
+    
+    - name: Start server
+      run: npm run start &
+      env:
+        PORT: 3000
+    
+    - name: Wait for server
+      run: npx wait-on http://localhost:3000
+    
+    - name: Run Lighthouse CI
+      run: |
+        npm install -g @lhci/cli@0.12.x
+        lhci autorun --upload.target=temporary-public-storage
+    
+    - name: Comment PR with Lighthouse results
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        urls: |
+          http://localhost:3000
+        configPath: './lighthouse.config.js'
+        uploadArtifacts: true
+        temporaryPublicStorage: true
