@@ -32,6 +32,28 @@ To make language learning accessible to everyone, regardless of visual ability, 
 - **Arnav Dhariya** - arnavdhariya
 - **James Khan** - khanjames160@gmail.com
 
+## 🧠 CursorAI Setup
+
+This project uses **CursorAI** for AI-assisted development with accessibility-first focus.
+
+### Documentation
+- [Practices](docs/cursorai_practices.md) – everyday usage
+- [Workflow](docs/cursorai_workflow.md) – feature development cycle
+- [MDC Rules](docs/cursor_mdc_rules.md) – rule structure and examples
+- [Guide](docs/cursor_doc_guide.md) – which doc to use and when
+
+### Quick Start
+1. Open project in Cursor
+2. Run "Cursor: Rebuild Codebase Index" (Cmd/Ctrl + Shift + P)
+3. Use prompts like: "Use @Docs/cursorai_workflow.md to plan the API module"
+
+### Rule System
+The project includes comprehensive MDC rules for:
+- **Security** (001-Core-Security.mdc)
+- **Accessibility** (002-Accessibility-First.mdc) 
+- **Code Quality** (003-Code-Quality.mdc)
+- **Documentation** (004-Documentation.mdc)
+
 ## 🤝 Contributing
 
 We welcome contributions from developers who are passionate about accessibility and inclusive design. Please see our [Contributing Guidelines](CONTRIBUTING.md) for more details.

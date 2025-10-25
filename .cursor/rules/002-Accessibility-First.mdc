@@ -1,0 +1,94 @@
+# Accessibility-First Development Rules
+
+## WCAG 2.1 AA Compliance
+- All features MUST meet WCAG 2.1 AA standards
+- Test with actual screen readers (NVDA, JAWS, VoiceOver)
+- Ensure keyboard navigation works for all interactive elements
+- Maintain color contrast ratio of at least 4.5:1
+
+## Screen Reader Compatibility
+```html
+<!-- ✅ GOOD - Proper ARIA labels -->
+<button aria-label="Play audio pronunciation" aria-describedby="audio-help">
+  🔊
+</button>
+<div id="audio-help">Plays the pronunciation of the current word</div>
+
+<!-- ❌ BAD - No accessibility information -->
+<button>🔊</button>
+```
+
+## Keyboard Navigation
+- All interactive elements must be keyboard accessible
+- Logical tab order throughout the application
+- Visible focus indicators on all focusable elements
+- Escape key functionality for modals and dropdowns
+
+## Audio-First Design
+```javascript
+// ✅ GOOD - Audio feedback for actions
+function announceToScreenReader(message) {
+  const liveRegion = document.getElementById('announcements');
+  liveRegion.textContent = message;
+  liveRegion.setAttribute('aria-live', 'polite');
+}
+
+// ✅ GOOD - Audio controls
+<audio controls aria-label="Word pronunciation">
+  <source src="pronunciation.mp3" type="audio/mpeg">
+</audio>
+```
+
+## ARIA Implementation
+- Use semantic HTML elements first
+- Add ARIA attributes when semantic HTML isn't sufficient
+- Implement proper ARIA landmarks (main, nav, section)
+- Use ARIA live regions for dynamic content updates
+
+## Color and Visual Design
+- Never rely solely on color to convey information
+- Provide alternative text for all images
+- Support high contrast mode
+- Ensure content is readable at 200% zoom
+
+## Testing Requirements
+- Test with at least one screen reader
+- Verify keyboard-only navigation
+- Check color contrast ratios
+- Test with different zoom levels
+- Validate HTML and ARIA attributes
+
+## Mobile Accessibility
+- Touch targets minimum 44px x 44px
+- Support for mobile screen readers
+- Gesture alternatives for complex interactions
+- Voice control compatibility
+
+## Code Examples
+```javascript
+// ✅ GOOD - Accessible form
+<form>
+  <label for="user-answer">Your answer:</label>
+  <input 
+    type="text" 
+    id="user-answer" 
+    aria-required="true"
+    aria-describedby="answer-help"
+    required>
+  <div id="answer-help">Type your answer in Spanish</div>
+</form>
+
+// ✅ GOOD - Accessible navigation
+<nav aria-label="Lesson navigation">
+  <ul>
+    <li><a href="#lesson-1" aria-current="page">Lesson 1</a></li>
+    <li><a href="#lesson-2">Lesson 2</a></li>
+  </ul>
+</nav>
+```
+
+## Remember
+- Accessibility is not a feature, it's a requirement
+- Test early and test often
+- Include users with disabilities in testing
+- Document accessibility decisions

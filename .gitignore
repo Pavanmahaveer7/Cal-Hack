@@ -23,6 +23,11 @@ out/
 *.swo
 *~
 
+# Cursor AI configuration (keep rules, exclude sensitive settings)
+.cursor/settings.json
+.cursor/cache/
+.cursor/logs/
+
 # OS generated files
 .DS_Store
 .DS_Store?
