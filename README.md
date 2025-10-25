@@ -1,74 +1,157 @@
-# Cal-Hack
+# Braillience - Accessible Language Learning Platform
 
-## Duolingo for Blind Users
+An accessible Quizlet-style language learning platform designed specifically for blind and visually impaired users. Built with React and accessibility-first principles.
 
-An accessible language learning platform designed specifically for visually impaired users. This project aims to create an inclusive language learning experience that leverages audio, haptic feedback, and screen reader compatibility.
+## 🎯 Features
 
-## 🎯 Project Vision
+### 🔐 Authentication
+- **Secure Login System** - Email/password authentication
+- **Demo Credentials** - Easy testing with provided demo account
+- **Session Management** - Persistent login state
 
-To make language learning accessible to everyone, regardless of visual ability, by creating an intuitive and engaging platform that works seamlessly with assistive technologies.
+### 📚 Learning Modes
+- **Flashcards** - Traditional card-based learning with audio
+- **Multiple Choice** - Interactive quiz format
+- **Typing Practice** - Text input exercises
+- **Audio Feedback** - Text-to-speech for all content
 
-## 🚀 Features (Planned)
+### 🧠 Testing System
+- **Timed Tests** - 30-second per question mode
+- **Practice Mode** - No time pressure
+- **Speed Tests** - 10-second quick challenges
+- **Progress Tracking** - Score and accuracy monitoring
 
-- **Audio-First Learning**: Complete audio-based lessons and exercises
-- **Screen Reader Compatible**: Full compatibility with screen readers like NVDA, JAWS, and VoiceOver
-- **Haptic Feedback**: Touch-based learning for mobile devices
-- **Voice Recognition**: Speech-based exercises and pronunciation practice
-- **Accessible UI**: High contrast, large text, and keyboard navigation
-- **Multi-language Support**: Learn multiple languages with full accessibility
+### ♿ Accessibility Features
+- **Screen Reader Compatible** - Full ARIA support
+- **Keyboard Navigation** - Complete keyboard accessibility
+- **High Contrast Mode** - Enhanced visibility
+- **Audio Controls** - Toggle audio feedback
+- **Focus Indicators** - Clear focus management
+- **Skip Links** - Quick navigation for screen readers
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 16+ 
+- npm 8+
+
+### Installation
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Start Development Server**
+   ```bash
+   npm start
+   ```
+
+3. **Open in Browser**
+   - Navigate to `http://localhost:3000`
+   - Use demo credentials: `demo@braillience.com` / `demo123`
+
+### Demo Credentials
+- **Email:** demo@braillience.com
+- **Password:** demo123
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: React with accessibility-first design
-- **Backend**: Node.js/Express
-- **Database**: PostgreSQL
-- **Audio Processing**: Web Audio API
-- **Accessibility**: ARIA, WCAG 2.1 AA compliance
+- **Frontend:** React 18, React Router 6
+- **Styling:** CSS3 with CSS Variables
+- **Icons:** React Icons (Feather Icons)
+- **Audio:** Web Speech API
+- **Accessibility:** ARIA, WCAG 2.1 AA compliant
 
-## 👥 Team
+## 📱 Responsive Design
 
-- **Pavan Singara** - Project Lead
-- **Ragavan** - ragavan.ims@gmail.com
-- **Arnav Dhariya** - arnavdhariya
-- **Bilal Hasan** - khanjames160@gmail.com
+- **Mobile-First** - Optimized for all screen sizes
+- **Touch-Friendly** - Large touch targets
+- **Flexible Layout** - Adapts to different viewports
+- **High Contrast** - Enhanced visibility options
 
-## 🧠 CursorAI Setup
+## ♿ Accessibility Compliance
 
-This project uses **CursorAI** for AI-assisted development with accessibility-first focus.
+- **WCAG 2.1 AA** - Meets accessibility standards
+- **Screen Readers** - NVDA, JAWS, VoiceOver compatible
+- **Keyboard Only** - Full keyboard navigation
+- **High Contrast** - Enhanced color contrast
+- **Reduced Motion** - Respects user preferences
 
-### Documentation
-- [Practices](docs/cursorai_practices.md) – everyday usage
-- [Workflow](docs/cursorai_workflow.md) – feature development cycle
-- [MDC Rules](docs/cursor_mdc_rules.md) – rule structure and examples
-- [Guide](docs/cursor_doc_guide.md) – which doc to use and when
+## 🎨 UI/UX Features
 
-### Quick Start
-1. Open project in Cursor
-2. Run "Cursor: Rebuild Codebase Index" (Cmd/Ctrl + Shift + P)
-3. Use prompts like: "Use @Docs/cursorai_workflow.md to plan the API module"
+- **Modern Design** - Clean, intuitive interface
+- **Consistent Branding** - Cohesive visual identity
+- **Smooth Animations** - Subtle, purposeful motion
+- **Loading States** - Clear feedback during operations
+- **Error Handling** - User-friendly error messages
 
-### Rule System
-The project includes comprehensive MDC rules for:
-- **Security** (001-Core-Security.mdc)
-- **Accessibility** (002-Accessibility-First.mdc) 
-- **Code Quality** (003-Code-Quality.mdc)
-- **Documentation** (004-Documentation.mdc)
+## 🔧 Development
+
+### Available Scripts
+
+- `npm start` - Start development server
+- `npm build` - Build for production
+- `npm test` - Run tests
+- `npm run lint` - Run ESLint
+
+### Project Structure
+
+```
+src/
+├── components/          # React components
+│   ├── Login.js        # Authentication
+│   ├── Dashboard.js    # Main dashboard
+│   ├── Learn.js        # Learning interface
+│   ├── Test.js         # Testing interface
+│   ├── Header.js       # Navigation header
+│   └── Footer.js       # Site footer
+├── contexts/           # React contexts
+│   └── AuthContext.js  # Authentication state
+├── App.js             # Main app component
+├── App.css            # App styles
+├── index.js           # Entry point
+└── index.css          # Global styles
+```
+
+## 🌟 Key Features for Blind Users
+
+### Audio-First Design
+- **Text-to-Speech** - All content is spoken
+- **Audio Controls** - Easy audio toggle
+- **Voice Feedback** - Immediate audio responses
+- **Pronunciation** - Audio pronunciation guides
+
+### Navigation
+- **Skip Links** - Quick content access
+- **Landmark Navigation** - Clear page structure
+- **Focus Management** - Logical tab order
+- **Screen Reader Announcements** - Live region updates
+
+### Interaction
+- **Large Touch Targets** - Easy to activate
+- **Clear Labels** - Descriptive button text
+- **Status Updates** - Progress announcements
+- **Error Prevention** - Clear validation messages
+
+## 🎯 Hackathon Ready
+
+This project is specifically designed for hackathon presentation:
+
+- **Complete Functionality** - All core features implemented
+- **Professional UI** - Polished, modern design
+- **Accessibility Focus** - Clear accessibility benefits
+- **Easy Demo** - Simple demo credentials provided
+- **Scalable Architecture** - Ready for backend integration
 
 ## 🤝 Contributing
 
-We welcome contributions from developers who are passionate about accessibility and inclusive design. Please see our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+We welcome contributions! Please see our contributing guidelines for more details.
 
-## 📝 License
+## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🔗 Getting Started
-
-1. Clone the repository
-2. Install dependencies
-3. Run the development server
-4. Start contributing to accessible language learning!
+This project is open source and available under the MIT License.
 
 ---
 
-*Making language learning accessible to everyone, one lesson at a time.*
+**Making language learning accessible to everyone, one lesson at a time.** 🌟
