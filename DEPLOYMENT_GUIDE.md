@@ -137,16 +137,31 @@ railway up
 
 ## Domain Setup
 
-### Custom Domain
-1. Buy domain from Namecheap, GoDaddy, etc.
-2. Add domain to hosting platform
-3. Update DNS records
-4. Configure SSL certificate
+### Custom Domain on Railway
+1. **Buy domain** from Namecheap, GoDaddy, Cloudflare, etc.
+2. **Add domain to Railway**:
+   - Go to Railway dashboard → Settings → Domains
+   - Click "Custom Domain"
+   - Enter your domain (e.g., `braillience.com`)
+3. **Update DNS records** at your domain provider:
+   ```
+   Type: CNAME
+   Name: @ (or subdomain like app)
+   Value: [your-railway-app].railway.app
+   TTL: 300
+   ```
+4. **SSL certificate** is automatically provisioned by Railway
+5. **Add environment variable** in Railway:
+   ```
+   REACT_APP_API_URL=https://your-custom-domain.com
+   ```
 
 ### Subdomain Examples
 - `braillience.vercel.app` (Vercel)
 - `braillience.railway.app` (Railway)
 - `braillience.netlify.app` (Netlify)
+- `braillience.com` (Custom domain)
+- `app.braillience.com` (Custom subdomain)
 
 ## Monitoring & Analytics
 
