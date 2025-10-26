@@ -1,0 +1,67 @@
+{
+  "id": "conv_1761436815479_rn6f4kjup",
+  "userId": "demo-user",
+  "callId": "019a1dd0-9e4d-744a-8508-1f1e4dce6aa6",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-26T00:00:15.479Z",
+  "status": "active",
+  "messages": [
+    {
+      "type": "system",
+      "content": "Teacher call started for document: Accessable Submission.pdf",
+      "metadata": {
+        "flashcardCount": 14
+      }
+    }
+  ],
+  "metadata": {
+    "flashcardCount": 14,
+    "documentContent": "\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\nTeacher, But Also Student: Challenges and Tech Needs of Adult Braille Learners \nwith Sight \nANONYMOUS AUTHOR(S) \nBraille literacy is critical for blind individuals’ independence and quality of life, yet literacy rates continue to decline. Though braille \ninstructors in integrated K-12 classrooms play a central role in literacy development in blind y",
+    "vapiResponse": {
+      "id": "019a1dd0-9e4d-744a-8508-1f1e4dce6aa6",
+      "assistantId": "5c45bdff-f5cd-45f5-9a6e-cf03665b0073",
+      "phoneNumberId": "1906f7d6-a43c-4bf6-b317-b0402ebc3c28",
+      "type": "outboundPhoneCall",
+      "createdAt": "2025-10-26T00:00:02.637Z",
+      "updatedAt": "2025-10-26T00:00:14.346Z",
+      "orgId": "4c74e8c2-226e-4a2b-ab42-577a32c7607c",
+      "cost": 0,
+      "customer": {
+        "name": "Student demo-user",
+        "number": "+16506844796"
+      },
+      "status": "queued",
+      "maxDurationSeconds": 3600,
+      "metadata": {
+        "mode": "teacher",
+        "userId": "demo-user",
+        "documentId": 4,
+        "documentName": "Accessable Submission.pdf",
+        "flashcardCount": 14
+      },
+      "phoneCallProvider": "vapi",
+      "phoneCallProviderId": "2c9dae06-a308-44a7-9fb8-9ca679f991e5",
+      "phoneCallTransport": "pstn",
+      "phoneCallProviderDetails": {
+        "sbcCallId": "96f93ad7-2ca1-123f-44b1-0aea14c827b7"
+      },
+      "assistantOverrides": {
+        "firstMessage": "Hello! I'm your AI teacher for Braillience. I'm going to walk through your document \"Accessable Submission.pdf\" with you. This document has 14 key concepts we'll explore together. Are you ready to begin learning?"
+      },
+      "monitor": {
+        "listenUrl": "wss://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/019a1dd0-9e4d-744a-8508-1f1e4dce6aa6/listen",
+        "controlUrl": "https://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/019a1dd0-9e4d-744a-8508-1f1e4dce6aa6/control"
+      },
+      "transport": {
+        "callSid": "2c9dae06-a308-44a7-9fb8-9ca679f991e5",
+        "provider": "vapi.sip",
+        "sbcCallSid": "96f93ad7-2ca1-123f-44b1-0aea14c827b7"
+      }
+    }
+  },
+  "createdAt": "2025-10-26T00:00:15.480Z",
+  "updatedAt": "2025-10-26T00:00:15.480Z"
+}

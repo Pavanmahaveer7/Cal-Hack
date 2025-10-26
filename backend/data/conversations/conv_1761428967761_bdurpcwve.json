@@ -1,0 +1,55 @@
+{
+  "id": "conv_1761428967761_bdurpcwve",
+  "userId": "demo-user",
+  "callId": "019a1d58-f945-7994-a8ae-0cdadc8b9101",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-25T21:49:27.761Z",
+  "status": "active",
+  "messages": [
+    {
+      "type": "system",
+      "content": "Stateful teacher call started with context: 0 previous sessions, visual learning style, novice mastery level",
+      "metadata": {
+        "flashcardCount": 14,
+        "context": {
+          "totalSessions": 0,
+          "preferredStyle": "visual",
+          "masteryLevel": "novice",
+          "strengths": [],
+          "weaknesses": [],
+          "averageSessionDuration": 0
+        },
+        "personalizedGreeting": "Hello! Welcome to your personalized learning experience. I'm here to help you succeed!"
+      }
+    }
+  ],
+  "metadata": {
+    "flashcardCount": 14,
+    "documentContent": "\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\nTeacher, But Also Student: Challenges and Tech Needs of Adult Braille Learners \nwith Sight \nANONYMOUS AUTHOR(S) \nBraille literacy is critical for blind individuals’ independence and quality of life, yet literacy rates continue to decline. Though braille \ninstructors in integrated K-12 classrooms play a central role in literacy development in blind y",
+    "conversationContext": {
+      "totalSessions": 0,
+      "preferredStyle": "visual",
+      "masteryLevel": "novice",
+      "strengths": [],
+      "weaknesses": [],
+      "averageSessionDuration": 0
+    },
+    "personalizedInsights": {
+      "personalizedGreeting": "Hello! Welcome to your personalized learning experience. I'm here to help you succeed!",
+      "learningRecommendations": [],
+      "focusAreas": [
+        "Focus on strengthening areas that need improvement"
+      ],
+      "encouragement": "Welcome to your learning adventure! I'm excited to help you achieve your goals.",
+      "studyTips": [
+        "Take breaks between sessions to let information sink in"
+      ]
+    },
+    "isStateful": true
+  },
+  "createdAt": "2025-10-25T21:49:27.761Z",
+  "updatedAt": "2025-10-25T21:49:27.761Z"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "conv_1761432984747_u88autjx8",
+  "userId": "blind-student-001",
+  "callId": "local-call-followup-1761432984746",
+  "phoneNumber": "+1234567890",
+  "documentId": "2",
+  "documentName": "World History Chapter 12",
+  "mode": "teacher",
+  "startTime": "2025-10-25T22:56:24.746Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hi, I'm calling back about the World War II lesson we discussed earlier. Teacher: Hello again! I remember our conversation about World War II causes and key events. How can I help you today?",
+      "timestamp": "2025-10-25T22:56:24.747Z"
+    },
+    {
+      "type": "user",
+      "content": "I want to understand more about the Holocaust. Can you explain it? Teacher: Of course. The Holocaust was the systematic persecution and murder of six million Jews and millions of others by Nazi Germany. It's a crucial part of understanding WWII's impact.",
+      "timestamp": "2025-10-25T22:56:24.747Z"
+    },
+    {
+      "type": "user",
+      "content": "That's very important to understand. Thank you for explaining it clearly. Teacher: You're welcome. It's important to learn about these historical events to understand their impact on the world today.",
+      "timestamp": "2025-10-25T22:56:24.747Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+1234567890",
+    "documentId": "2",
+    "documentName": "World History Chapter 12",
+    "mode": "teacher",
+    "startTime": "2025-10-25T22:56:24.746Z",
+    "duration": 120000,
+    "callQuality": "excellent",
+    "studentType": "blind",
+    "accessibility": "audio_only",
+    "followUp": true,
+    "previousCall": "local-call-1761432983746",
+    "transcriptLength": 672,
+    "messageCount": 3,
+    "processedAt": "2025-10-25T22:56:24.747Z"
+  },
+  "createdAt": "2025-10-25T22:56:24.747Z",
+  "updatedAt": "2025-10-25T22:56:24.747Z"
+}

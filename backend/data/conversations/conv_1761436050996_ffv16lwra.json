@@ -1,0 +1,29 @@
+{
+  "id": "conv_1761436050996_ffv16lwra",
+  "userId": "test-letta-agent-user",
+  "callId": "test-call-letta-agent",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-25T23:47:30.996Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hello, I want to learn about accessibility and braille literacy. Teacher: Hi! I'm excited to help you learn about accessibility and braille literacy. These are crucial topics for creating inclusive learning environments. Let's start with the basics - what do you already know about braille?",
+      "timestamp": "2025-10-25T23:47:30.996Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": 4,
+    "documentName": "Accessable Submission.pdf",
+    "mode": "teacher",
+    "transcriptLength": 299,
+    "messageCount": 1,
+    "processedAt": "2025-10-25T23:47:30.996Z"
+  },
+  "createdAt": "2025-10-25T23:47:30.996Z",
+  "updatedAt": "2025-10-25T23:47:30.996Z"
+}

@@ -9,6 +9,7 @@ import Upload from './components/Upload';
 import Flashcards from './components/Flashcards';
 import VoiceLearning from './components/VoiceLearning';
 import VAPITeacher from './components/VAPITeacher';
+import Conversations from './components/Conversations';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -40,6 +41,7 @@ function AppContent() {
                   <Route path="/flashcards" element={user ? <Flashcards /> : <Navigate to="/login" />} />
                   <Route path="/voice-learning" element={user ? <VoiceLearning /> : <Navigate to="/login" />} />
                   <Route path="/vapi-teacher" element={user ? <VAPITeacher /> : <Navigate to="/login" />} />
+                  <Route path="/conversations" element={user ? <Conversations /> : <Navigate to="/login" />} />
         </Routes>
       </main>
       <Footer />

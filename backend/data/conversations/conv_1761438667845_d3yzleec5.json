@@ -1,0 +1,37 @@
+{
+  "id": "conv_1761438667845_d3yzleec5",
+  "userId": "demo-user",
+  "callId": "test-call-fixed",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-01-25T22:00:00Z",
+  "endTime": "2025-01-25T22:02:00Z",
+  "duration": 120,
+  "status": "completed",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello, I want to learn about this document.",
+      "timestamp": "2025-10-26T00:31:07.845Z"
+    },
+    {
+      "role": "assistant",
+      "content": "Great! I am your AI teacher. Let us start with the first concept...",
+      "timestamp": "2025-10-26T00:31:07.845Z"
+    }
+  ],
+  "metadata": {
+    "vapiCallId": "test-call-fixed",
+    "phoneNumber": "+16506844796",
+    "duration": 120,
+    "status": "completed",
+    "transcriptLength": 128,
+    "messageCount": 2,
+    "processedAt": "2025-10-26T00:31:07.845Z",
+    "source": "vapi-webhook"
+  },
+  "createdAt": "2025-10-26T00:31:07.845Z",
+  "updatedAt": "2025-10-26T00:31:07.845Z"
+}

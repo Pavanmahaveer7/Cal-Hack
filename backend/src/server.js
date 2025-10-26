@@ -34,6 +34,9 @@ app.use('/api/flashcards', require('./routes/flashcards'))
 app.use('/api/learning', require('./routes/learning'))
 app.use('/api/voice', require('./routes/voice'))
 app.use('/api/voice-learning', require('./routes/voice-learning')) // New voice-driven learning
+app.use('/api/conversations', require('./routes/conversations')) // Conversation storage with Letta
+app.use('/api/stateful-vapi', require('./routes/stateful-vapi')) // Stateful VAPI agent with memory
+app.use('/api/vapi-transcripts', require('./routes/vapi-transcripts')) // VAPI transcript processing with Letta
 app.use('/api/test', require('./routes/test'))
 app.use('/api/test-ai', require('./routes/test-ai'))
 

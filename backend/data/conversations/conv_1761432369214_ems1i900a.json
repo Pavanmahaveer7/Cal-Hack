@@ -1,0 +1,47 @@
+{
+  "id": "conv_1761432369214_ems1i900a",
+  "userId": "demo-user",
+  "callId": "call-12345-phone-test",
+  "phoneNumber": "+16506844796",
+  "documentId": "4",
+  "documentName": "Biology Chapter 5",
+  "mode": "teacher",
+  "startTime": "2025-10-25T22:46:09.198Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hello, I'm calling about my biology lesson. Teacher: Hello! I'm your AI teacher. I'm here to help you with biology. What specific topic would you like to discuss?",
+      "timestamp": "2025-10-25T22:46:09.214Z"
+    },
+    {
+      "type": "user",
+      "content": "I'm struggling with photosynthesis. Can you explain it? Teacher: Of course! Photosynthesis is the process by which plants convert sunlight into energy. Let me break it down for you...",
+      "timestamp": "2025-10-25T22:46:09.214Z"
+    },
+    {
+      "type": "user",
+      "content": "That makes sense! What about the light and dark reactions? Teacher: Great question! The light reactions happen in the thylakoids and capture light energy, while the dark reactions occur in the stroma and use that energy to make glucose.",
+      "timestamp": "2025-10-25T22:46:09.214Z"
+    },
+    {
+      "type": "user",
+      "content": "Thank you! This is much clearer now. Teacher: You're welcome! You're doing great with these concepts.",
+      "timestamp": "2025-10-25T22:46:09.214Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": "4",
+    "documentName": "Biology Chapter 5",
+    "mode": "teacher",
+    "startTime": "2025-10-25T22:46:09.198Z",
+    "duration": 300000,
+    "callQuality": "good",
+    "transcriptLength": 721,
+    "messageCount": 4,
+    "processedAt": "2025-10-25T22:46:09.214Z"
+  },
+  "createdAt": "2025-10-25T22:46:09.214Z",
+  "updatedAt": "2025-10-25T22:46:09.214Z"
+}

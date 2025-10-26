@@ -1,0 +1,47 @@
+{
+  "id": "conv_1761432591346_r1eket72v",
+  "userId": "test-user-local",
+  "callId": "local-test-call-123",
+  "phoneNumber": "+1234567890",
+  "documentId": "1",
+  "documentName": "Math Chapter 3",
+  "mode": "teacher",
+  "startTime": "2025-10-25T22:49:51.344Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hi, I'm calling about my math homework. Teacher: Hello! I'm your AI tutor. I'm here to help you with math. What specific problem are you working on?",
+      "timestamp": "2025-10-25T22:49:51.346Z"
+    },
+    {
+      "type": "user",
+      "content": "I'm struggling with quadratic equations. Can you explain them? Teacher: Of course! Quadratic equations have the form ax² + bx + c = 0. Let me walk you through an example...",
+      "timestamp": "2025-10-25T22:49:51.346Z"
+    },
+    {
+      "type": "user",
+      "content": "That makes sense! What about the quadratic formula? Teacher: Great question! The quadratic formula is x = (-b ± √(b² - 4ac)) / 2a. It helps you find the roots of any quadratic equation.",
+      "timestamp": "2025-10-25T22:49:51.346Z"
+    },
+    {
+      "type": "user",
+      "content": "Thank you! This is much clearer now. Teacher: You're welcome! You're doing great with these concepts. Keep practicing!",
+      "timestamp": "2025-10-25T22:49:51.346Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+1234567890",
+    "documentId": "1",
+    "documentName": "Math Chapter 3",
+    "mode": "teacher",
+    "startTime": "2025-10-25T22:49:51.344Z",
+    "duration": 180000,
+    "callQuality": "good",
+    "transcriptLength": 662,
+    "messageCount": 4,
+    "processedAt": "2025-10-25T22:49:51.346Z"
+  },
+  "createdAt": "2025-10-25T22:49:51.346Z",
+  "updatedAt": "2025-10-25T22:49:51.346Z"
+}

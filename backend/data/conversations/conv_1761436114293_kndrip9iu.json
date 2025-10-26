@@ -1,0 +1,39 @@
+{
+  "id": "conv_1761436114293_kndrip9iu",
+  "userId": "demo-user",
+  "callId": "test-real-conversation-1761436114292",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-25T23:48:34.293Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hi, I'm calling about the accessibility document we discussed. Teacher: Hello! Great to hear from you. I have your \"Accessable Submission.pdf\" document here with 14 key concepts about braille literacy and accessibility. How are you feeling about the material so far?",
+      "timestamp": "2025-10-25T23:48:34.293Z"
+    },
+    {
+      "type": "user",
+      "content": "I'm a bit confused about the braille literacy challenges section. Can you help me understand that better? Teacher: Absolutely! Braille literacy challenges are a crucial topic. Let me break this down for you - the main challenges include limited access to braille materials, the transition from print to braille, and the need for ongoing practice. What specific aspect would you like to explore first?",
+      "timestamp": "2025-10-25T23:48:34.293Z"
+    },
+    {
+      "type": "user",
+      "content": "I think the transition from print to braille is what I'm struggling with most. Teacher: That's a very common challenge! The transition from print to braille involves several key steps. First, there's the tactile learning process - your fingers need to learn to \"read\" the raised dots. Then there's the cognitive shift from visual to tactile processing. Would you like me to walk through some specific techniques for this transition?",
+      "timestamp": "2025-10-25T23:48:34.293Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": 4,
+    "documentName": "Accessable Submission.pdf",
+    "mode": "teacher",
+    "transcriptLength": 1127,
+    "messageCount": 3,
+    "processedAt": "2025-10-25T23:48:34.293Z"
+  },
+  "createdAt": "2025-10-25T23:48:34.293Z",
+  "updatedAt": "2025-10-25T23:48:34.293Z"
+}

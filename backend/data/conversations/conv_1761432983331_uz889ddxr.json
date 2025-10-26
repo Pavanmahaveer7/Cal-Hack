@@ -1,0 +1,49 @@
+{
+  "id": "conv_1761432983331_uz889ddxr",
+  "userId": "blind-student-001",
+  "callId": "local-call-1761432983330",
+  "phoneNumber": "+1234567890",
+  "documentId": "2",
+  "documentName": "World History Chapter 12",
+  "mode": "teacher",
+  "startTime": "2025-10-25T22:56:23.330Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hello, I'm calling about my history lesson on World War II. Teacher: Hello! I'm your AI tutor. I'm here to help you with history. What specific aspect of World War II would you like to discuss?",
+      "timestamp": "2025-10-25T22:56:23.331Z"
+    },
+    {
+      "type": "user",
+      "content": "I'm having trouble understanding the causes of the war. Can you explain them? Teacher: Of course! The main causes were: 1) Treaty of Versailles, 2) Rise of fascism, 3) Economic depression, 4) Failure of appeasement. Let me explain each one...",
+      "timestamp": "2025-10-25T22:56:23.331Z"
+    },
+    {
+      "type": "user",
+      "content": "That's helpful! What about the key events during the war? Teacher: Great question! Key events include: Pearl Harbor (1941), D-Day (1944), Battle of Stalingrad (1942-43), and the atomic bombs (1945). Each had significant impact.",
+      "timestamp": "2025-10-25T22:56:23.331Z"
+    },
+    {
+      "type": "user",
+      "content": "Thank you! This gives me a much better understanding. Teacher: You're welcome! You're doing great with these historical concepts. Keep up the excellent work!",
+      "timestamp": "2025-10-25T22:56:23.331Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+1234567890",
+    "documentId": "2",
+    "documentName": "World History Chapter 12",
+    "mode": "teacher",
+    "startTime": "2025-10-25T22:56:23.330Z",
+    "duration": 240000,
+    "callQuality": "excellent",
+    "studentType": "blind",
+    "accessibility": "audio_only",
+    "transcriptLength": 858,
+    "messageCount": 4,
+    "processedAt": "2025-10-25T22:56:23.331Z"
+  },
+  "createdAt": "2025-10-25T22:56:23.331Z",
+  "updatedAt": "2025-10-25T22:56:23.331Z"
+}

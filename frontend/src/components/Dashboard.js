@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiBookOpen, FiAward, FiTrendingUp, FiClock, FiTarget, FiVolume2 } from 'react-icons/fi';
+import { FiBookOpen, FiAward, FiTrendingUp, FiClock, FiTarget, FiVolume2, FiMessageCircle } from 'react-icons/fi';
 import { useVoiceCommands } from '../hooks/useVoiceCommands';
 import './Dashboard.css';
 
@@ -111,6 +111,13 @@ function Dashboard() {
               icon: FiVolume2,
               link: '/vapi-teacher',
               color: 'accent'
+            },
+            {
+              title: 'Conversations',
+              description: 'View your learning conversation history',
+              icon: FiMessageCircle,
+              link: '/conversations',
+              color: 'secondary'
             },
     {
       title: 'Study Flashcards',

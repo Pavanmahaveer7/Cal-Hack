@@ -1,0 +1,39 @@
+{
+  "id": "conv_1761437281085_jkzwk1gqu",
+  "userId": "test-complete-letta-fix",
+  "callId": "test-call-complete-fix",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-26T00:08:01.085Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hi, I want to learn about accessibility and braille literacy. Teacher: Hello! I have your document about accessibility with 14 key concepts. Let me help you understand braille literacy challenges.",
+      "timestamp": "2025-10-26T00:08:01.085Z"
+    },
+    {
+      "type": "user",
+      "content": "I am confused about the transition from print to braille. Teacher: That is a common challenge! The transition involves learning to read with your fingers instead of your eyes. Let me explain the key steps.",
+      "timestamp": "2025-10-26T00:08:01.085Z"
+    },
+    {
+      "type": "user",
+      "content": "Can you help me understand the specific challenges? Teacher: Absolutely! The main challenges include limited access to braille materials, the cognitive shift from visual to tactile processing, and the need for consistent practice.",
+      "timestamp": "2025-10-26T00:08:01.085Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": 4,
+    "documentName": "Accessable Submission.pdf",
+    "mode": "teacher",
+    "transcriptLength": 660,
+    "messageCount": 3,
+    "processedAt": "2025-10-26T00:08:01.085Z"
+  },
+  "createdAt": "2025-10-26T00:08:01.085Z",
+  "updatedAt": "2025-10-26T00:08:01.085Z"
+}

@@ -213,10 +213,166 @@ Focus on key concepts, important terms, and understanding questions. Make them e
     
     return commonWords.length >= Math.min(2, correctWords.length * 0.3)
   }
+
+  /**
+   * Generate personalized response using conversation context
+   * @param {Object} params - Response parameters
+   * @returns {Promise<Object>} - Personalized response
+   */
+  async generatePersonalizedResponse({ userInput, currentFlashcard, availableFlashcards, context, userId }) {
+    try {
+      console.log(`🤖 Generating personalized response for user: ${userId}`);
+      
+      if (!this.apiKey || this.apiKey === 'mock-key') {
+        return this.generateMockPersonalizedResponse({ userInput, currentFlashcard, availableFlashcards, context });
+      }
+
+      const prompt = this.createPersonalizedPrompt({ userInput, currentFlashcard, availableFlashcards, context });
+      const response = await this.callGeminiAPI(prompt);
+      
+      return this.parsePersonalizedResponse(response);
+    } catch (error) {
+      console.error('❌ Error generating personalized response:', error);
+      return this.generateMockPersonalizedResponse({ userInput, currentFlashcard, availableFlashcards, context });
+    }
+  }
+
+  /**
+   * Create personalized prompt for AI
+   * @param {Object} params - Prompt parameters
+   * @returns {string} - Personalized prompt
+   */
+  createPersonalizedPrompt({ userInput, currentFlashcard, availableFlashcards, context }) {
+    return `You are a personalized AI tutor for a blind college student. Use the conversation context to provide tailored responses.
+
+STUDENT CONTEXT:
+- Total learning sessions: ${context.totalConversations}
+- Preferred learning style: ${context.preferredLearningStyle}
+- Mastery level: ${context.learningProgress.masteryLevel}
+- Strengths: ${context.strengths.join(', ') || 'Building confidence'}
+- Areas for improvement: ${context.weaknesses.join(', ') || 'General practice'}
+- Last session: ${context.lastSessionDate ? new Date(context.lastSessionDate).toLocaleDateString() : 'First session'}
+
+CURRENT SESSION:
+- Current flashcard: ${currentFlashcard ? currentFlashcard.front : 'None'}
+- Available flashcards: ${availableFlashcards.length}
+- User input: "${userInput}"
+
+PERSONALIZED INSIGHTS:
+- Greeting: ${context.insights.personalizedGreeting}
+- Recommendations: ${context.insights.learningRecommendations.join('; ')}
+- Focus areas: ${context.insights.focusAreas.join('; ')}
+- Encouragement: ${context.insights.encouragement}
+
+RESPONSE REQUIREMENTS:
+1. Start with a personalized greeting that references their learning history
+2. Address their specific learning style (${context.preferredLearningStyle})
+3. Adapt complexity to their mastery level (${context.learningProgress.masteryLevel})
+4. Build on their strengths while addressing weaknesses
+5. Provide encouragement based on their learning journey
+6. Use their preferred learning approach
+7. Reference previous learning when relevant
+
+Generate a personalized response that:
+- Acknowledges their learning progress
+- Adapts to their learning style
+- Provides appropriate encouragement
+- Offers relevant next steps
+- Maintains continuity with their learning journey
+
+Respond in a conversational, encouraging tone that shows you remember their learning history and are building on their progress.`;
+  }
+
+  /**
+   * Parse personalized response from AI
+   * @param {string} response - AI response
+   * @returns {Object} - Parsed response
+   */
+  parsePersonalizedResponse(response) {
+    try {
+      // Extract the main message
+      const message = response.trim();
+      
+      // Determine next actions based on content
+      let nextFlashcard = null;
+      let sessionAction = null;
+      let navigation = null;
+      let insights = [];
+
+      // Look for continuation indicators
+      if (message.toLowerCase().includes('next question') || message.toLowerCase().includes('let\'s continue')) {
+        sessionAction = { type: 'next_question' };
+      }
+      
+      if (message.toLowerCase().includes('repeat') || message.toLowerCase().includes('again')) {
+        sessionAction = { type: 'repeat_question' };
+      }
+      
+      if (message.toLowerCase().includes('hint') || message.toLowerCase().includes('help')) {
+        sessionAction = { type: 'show_hint' };
+      }
+      
+      if (message.toLowerCase().includes('go back') || message.toLowerCase().includes('dashboard')) {
+        navigation = { action: 'go_to_dashboard' };
+      }
+
+      // Extract insights
+      if (message.includes('excellent') || message.includes('great job')) {
+        insights.push('positive_feedback');
+      }
+      if (message.includes('struggling') || message.includes('difficult')) {
+        insights.push('needs_support');
+      }
+
+      return {
+        message,
+        nextFlashcard,
+        progress: null,
+        sessionAction,
+        navigation,
+        insights
+      };
+    } catch (error) {
+      console.error('❌ Error parsing personalized response:', error);
+      return {
+        message: "I understand. Let's continue with your learning. What would you like to focus on next?",
+        nextFlashcard: null,
+        progress: null
+      };
+    }
+  }
+
+  /**
+   * Generate mock personalized response
+   * @param {Object} params - Response parameters
+   * @returns {Object} - Mock response
+   */
+  generateMockPersonalizedResponse({ userInput, currentFlashcard, availableFlashcards, context }) {
+    const personalizedGreeting = context.insights.personalizedGreeting;
+    const encouragement = context.insights.encouragement;
+    
+    let response = `${personalizedGreeting} ${encouragement} `;
+    
+    if (currentFlashcard) {
+      response += `Let's work on this concept: ${currentFlashcard.front}. What do you think about this?`;
+    } else {
+      response += "What would you like to learn about today?";
+    }
+    
+    return {
+      message: response,
+      nextFlashcard: currentFlashcard,
+      progress: null,
+      sessionAction: null,
+      navigation: null,
+      insights: ['personalized_response']
+    };
+  }
 }
 
 module.exports = {
   generateFlashcards: (text) => new AIService().generateFlashcards(text),
   generateSpeechResponse: (text, voiceSettings) => new AIService().generateSpeechResponse(text, voiceSettings),
-  processLearningResponse: (userAnswer, correctAnswer, context) => new AIService().processLearningResponse(userAnswer, correctAnswer, context)
+  processLearningResponse: (userAnswer, correctAnswer, context) => new AIService().processLearningResponse(userAnswer, correctAnswer, context),
+  generatePersonalizedResponse: (params) => new AIService().generatePersonalizedResponse(params)
 }

@@ -1,0 +1,29 @@
+{
+  "id": "conv_1761437197404_2dwimg263",
+  "userId": "test-real-conversation",
+  "callId": "test-call-real-conversation",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-26T00:06:37.404Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hi, I want to learn about accessibility and braille literacy. Teacher: Hello! I have your document about accessibility with 14 key concepts. Let me help you understand braille literacy challenges. Student: I am confused about the transition from print to braille. Teacher: That is a common challenge! The transition involves learning to read with your fingers instead of your eyes. Let me explain the key steps.",
+      "timestamp": "2025-10-26T00:06:37.404Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": 4,
+    "documentName": "Accessable Submission.pdf",
+    "mode": "teacher",
+    "transcriptLength": 420,
+    "messageCount": 1,
+    "processedAt": "2025-10-26T00:06:37.404Z"
+  },
+  "createdAt": "2025-10-26T00:06:37.404Z",
+  "updatedAt": "2025-10-26T00:06:37.404Z"
+}

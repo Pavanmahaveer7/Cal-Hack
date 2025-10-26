@@ -1,0 +1,29 @@
+{
+  "id": "conv_1761435438560_pes7hoqoo",
+  "userId": "demo-user",
+  "callId": "019a1dbb-b7fd-7669-8d1e-1412d12bc3b9",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-25T23:37:18.560Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "I want to learn about the document you mentioned. What are the key concepts? Teacher: Based on your document \"Accessable Submission.pdf\", I can see you have 14 key concepts to learn. The main topics include braille literacy challenges, adult learning needs, and technology requirements for blind students.",
+      "timestamp": "2025-10-25T23:37:18.560Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": 4,
+    "documentName": "Accessable Submission.pdf",
+    "mode": "teacher",
+    "transcriptLength": 314,
+    "messageCount": 1,
+    "processedAt": "2025-10-25T23:37:18.560Z"
+  },
+  "createdAt": "2025-10-25T23:37:18.560Z",
+  "updatedAt": "2025-10-25T23:37:18.560Z"
+}

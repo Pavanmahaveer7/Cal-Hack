@@ -1,0 +1,31 @@
+{
+  "id": "conv_1761433201002_fh5vp7egg",
+  "userId": "test-student-now",
+  "callId": "test-call-12345",
+  "phoneNumber": "+1234567890",
+  "documentId": "1",
+  "documentName": "Science Chapter 3",
+  "mode": "teacher",
+  "startTime": "2025-10-25T23:00:01.002Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hello, I need help with my science homework. Teacher: Hi! I am your AI tutor. What science topic are you working on? Student: I am studying photosynthesis. Teacher: Great! Photosynthesis is how plants make food using sunlight. Let me explain it step by step...",
+      "timestamp": "2025-10-25T23:00:01.002Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+1234567890",
+    "documentId": "1",
+    "documentName": "Science Chapter 3",
+    "mode": "teacher",
+    "studentType": "blind",
+    "accessibility": "audio_only",
+    "transcriptLength": 269,
+    "messageCount": 1,
+    "processedAt": "2025-10-25T23:00:01.002Z"
+  },
+  "createdAt": "2025-10-25T23:00:01.002Z",
+  "updatedAt": "2025-10-25T23:00:01.002Z"
+}

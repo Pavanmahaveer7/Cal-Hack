@@ -1,0 +1,73 @@
+{
+  "id": "conv_1761438426272_9sw353so9",
+  "userId": "demo-user",
+  "callId": "real-call-1761438426261",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-26T00:27:06.272Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "assistant",
+      "content": {
+        "messages": [
+          {
+            "type": "assistant",
+            "content": "Hello! I'm your AI teacher for Braillience. I'm going to walk through your document \"Accessable Submission.pdf\" with you. This document has 14 key concepts we'll explore together. Are you ready to begin learning?",
+            "timestamp": "2025-10-26T00:27:06.261Z",
+            "metadata": {
+              "speaker": "teacher"
+            }
+          },
+          {
+            "type": "user",
+            "content": "Yes, I'm ready to learn about accessibility. I want to understand the key concepts.",
+            "timestamp": "2025-10-26T00:27:06.262Z",
+            "metadata": {
+              "speaker": "student"
+            }
+          },
+          {
+            "type": "assistant",
+            "content": "Great! Let's start with an overview. Your document \"Accessable Submission.pdf\" covers 14 important concepts. I'll walk you through each one, and we can discuss them together. What would you like to focus on first?",
+            "timestamp": "2025-10-26T00:27:06.262Z",
+            "metadata": {
+              "speaker": "teacher"
+            }
+          },
+          {
+            "type": "user",
+            "content": "I'm confused about the transition from print to braille. Can you help me understand that?",
+            "timestamp": "2025-10-26T00:27:06.262Z",
+            "metadata": {
+              "speaker": "student"
+            }
+          },
+          {
+            "type": "assistant",
+            "content": "That's a great question! The transition from print to braille involves learning to read with your fingers instead of your eyes. Let me explain the key steps...",
+            "timestamp": "2025-10-26T00:27:06.262Z",
+            "metadata": {
+              "speaker": "teacher"
+            }
+          }
+        ]
+      },
+      "timestamp": "2025-10-26T00:27:06.272Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": 4,
+    "documentName": "Accessable Submission.pdf",
+    "mode": "teacher",
+    "duration": "5 minutes",
+    "isRealCall": true,
+    "messageCount": 1,
+    "processedAt": "2025-10-26T00:27:06.272Z"
+  },
+  "createdAt": "2025-10-26T00:27:06.272Z",
+  "updatedAt": "2025-10-26T00:27:06.272Z"
+}

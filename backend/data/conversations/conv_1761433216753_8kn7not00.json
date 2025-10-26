@@ -1,0 +1,35 @@
+{
+  "id": "conv_1761433216753_8kn7not00",
+  "userId": "quick-test-user",
+  "callId": "quick-test-1761433216752",
+  "phoneNumber": "+1234567890",
+  "documentId": "1",
+  "documentName": "Math Chapter 2",
+  "mode": "teacher",
+  "startTime": "2025-10-25T23:00:16.753Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hi, I'm calling about my math homework. Teacher: Hello! I'm your AI tutor. What math topic are you working on?",
+      "timestamp": "2025-10-25T23:00:16.753Z"
+    },
+    {
+      "type": "user",
+      "content": "I'm struggling with algebra equations. Teacher: I can help you with algebra! Let me explain step by step...",
+      "timestamp": "2025-10-25T23:00:16.753Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+1234567890",
+    "documentId": "1",
+    "documentName": "Math Chapter 2",
+    "mode": "teacher",
+    "studentType": "blind",
+    "transcriptLength": 236,
+    "messageCount": 2,
+    "processedAt": "2025-10-25T23:00:16.753Z"
+  },
+  "createdAt": "2025-10-25T23:00:16.753Z",
+  "updatedAt": "2025-10-25T23:00:16.753Z"
+}

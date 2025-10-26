@@ -1,0 +1,29 @@
+{
+  "id": "conv_1761435383769_tt3oh5ghr",
+  "userId": "demo-user",
+  "callId": "test-call-pdf-context",
+  "phoneNumber": "+16506844796",
+  "documentId": 4,
+  "documentName": "Accessable Submission.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-25T23:36:23.769Z",
+  "status": "completed",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Hello, I want to learn about the document. Teacher: Hi! I have the full context of your document \"Accessable Submission.pdf\" with 14 key concepts. Let me teach you about braille literacy and adult learners.",
+      "timestamp": "2025-10-25T23:36:23.769Z"
+    }
+  ],
+  "metadata": {
+    "phoneNumber": "+16506844796",
+    "documentId": 4,
+    "documentName": "Accessable Submission.pdf",
+    "mode": "teacher",
+    "transcriptLength": 215,
+    "messageCount": 1,
+    "processedAt": "2025-10-25T23:36:23.769Z"
+  },
+  "createdAt": "2025-10-25T23:36:23.769Z",
+  "updatedAt": "2025-10-25T23:36:23.769Z"
+}

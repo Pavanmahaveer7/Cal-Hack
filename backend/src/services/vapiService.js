@@ -1,10 +1,13 @@
 const axios = require('axios')
+const conversationService = require('./conversationService')
 
 class VAPIService {
   constructor() {
     this.apiKey = process.env.VAPI_API_KEY
     this.baseUrl = process.env.VAPI_BASE_URL || 'https://api.vapi.ai'
     this.assistantId = process.env.VAPI_ASSISTANT_ID
+    this.phoneNumberId = process.env.VAPI_PHONE_NUMBER_ID
+    this.useRealVapi = process.env.USE_REAL_VAPI === 'true'
   }
 
   async createVoiceCall(userId, flashcards, mode = 'learning') {
@@ -457,12 +460,134 @@ Remember: This is for blind students, so focus on audio accessibility and clear 
     return words.slice(0, 5) // Return top 5 key concepts
   }
 
+  /**
+   * Send PDF content and flashcards to Letta agent as background context
+   */
+  async sendPDFContextToLetta(userId, document, flashcards) {
+    try {
+      console.log(`📚 Sending PDF context to Letta agent for user: ${userId}`)
+      
+      // Get or create Letta agent for user
+      const agentId = await conversationService.getUserLettaAgent(userId)
+      if (!agentId) {
+        console.log(`🤖 Creating new Letta agent for user: ${userId}`)
+        const newAgentId = await conversationService.createLettaAgent(userId, {
+          learningStyle: 'kinesthetic',
+          preferredMode: 'teacher',
+          documentContext: document.originalName
+        })
+        console.log(`🤖 Created Letta agent: ${newAgentId}`)
+      }
+
+      // Prepare PDF content for Letta
+      const pdfContext = {
+        documentName: document.originalName,
+        extractedText: document.extractedText || '',
+        flashcardCount: flashcards.length,
+        keyConcepts: flashcards.map(card => ({
+          question: card.question,
+          answer: card.answer,
+          difficulty: card.difficulty || 'medium'
+        })),
+        summary: `This document "${document.originalName}" contains ${flashcards.length} key learning concepts. The student will be learning about these topics through voice interaction.`
+      }
+
+      // Send context to Letta agent
+      const contextMessage = `📚 DOCUMENT CONTEXT FOR TEACHING SESSION:
+
+Document: ${pdfContext.documentName}
+Key Concepts: ${pdfContext.keyConcepts.length} flashcards
+Summary: ${pdfContext.summary}
+
+FLASHCARDS TO TEACH:
+${flashcards.map((card, index) => `${index + 1}. Q: ${card.question}\n   A: ${card.answer}`).join('\n\n')}
+
+Please use this context to provide personalized teaching based on the student's learning style and the document content.`
+
+      // Store this context in Letta with a user message to satisfy Letta's requirements
+      await conversationService.storeVapiTranscript(agentId, [
+        {
+          type: 'user',
+          content: `I want to learn about the document "${document.originalName}" with ${flashcards.length} key concepts. Please help me understand this material.`,
+          timestamp: new Date().toISOString(),
+          metadata: {
+            documentId: document.id,
+            documentName: document.originalName,
+            flashcardCount: flashcards.length,
+            contextType: 'learning_request'
+          }
+        },
+        {
+          type: 'assistant',
+          content: contextMessage,
+          timestamp: new Date().toISOString(),
+          metadata: {
+            documentId: document.id,
+            documentName: document.originalName,
+            flashcardCount: flashcards.length,
+            contextType: 'pdf_teaching_context'
+          }
+        }
+      ])
+
+      console.log(`✅ PDF context sent to Letta agent for user: ${userId}`)
+      return true
+    } catch (error) {
+      console.error('❌ Error sending PDF context to Letta:', error)
+      return false
+    }
+  }
+
+  /**
+   * Create enhanced teacher prompt with PDF content
+   */
+  createEnhancedTeacherPrompt(document, flashcards, mode) {
+    const documentSummary = document.extractedText ? 
+      document.extractedText.substring(0, 1000) + '...' : 
+      'Document content not available'
+    
+    const flashcardSummary = flashcards.slice(0, 5).map((card, index) => 
+      `${index + 1}. ${card.question} → ${card.answer}`
+    ).join('\n')
+
+    return `You are an AI teacher for Braillience, a voice-first learning platform for blind students. 
+
+📚 DOCUMENT CONTEXT:
+- Document: "${document.originalName}"
+- Key Concepts: ${flashcards.length} flashcards
+- Content Preview: ${documentSummary}
+
+🎯 TEACHING OBJECTIVES:
+- Help the student learn through voice interaction
+- Use the flashcards as your teaching guide
+- Adapt to the student's learning style
+- Provide clear, accessible explanations
+- Encourage and motivate the student
+
+📋 KEY CONCEPTS TO TEACH:
+${flashcardSummary}
+${flashcards.length > 5 ? `... and ${flashcards.length - 5} more concepts` : ''}
+
+🎤 TEACHING APPROACH:
+- Start with a warm greeting
+- Explain what you'll be teaching
+- Go through concepts one by one
+- Ask questions to check understanding
+- Provide encouragement and feedback
+- Adapt pace based on student responses
+
+Remember: You have access to the full document content and all flashcards. Use this knowledge to provide comprehensive, personalized teaching.`
+  }
+
   async createTeacherCall({ userId, phoneNumber, document, flashcards, mode }) {
     try {
       console.log(`🎓 Creating teacher call for user: ${userId}`)
       console.log(`📞 Phone number: ${phoneNumber}`)
       console.log(`📚 Document: ${document.originalName}`)
       console.log(`📋 Flashcards: ${flashcards.length}`)
+      
+      // First, send PDF content to Letta agent as background context
+      await this.sendPDFContextToLetta(userId, document, flashcards)
       
       if (!this.apiKey || this.apiKey === 'your-vapi-api-key-here') {
         console.log('🎭 Using enhanced mock teacher call for demo purposes')
@@ -471,7 +596,7 @@ Remember: This is for blind students, so focus on audio accessibility and clear 
 
       // Check if we have a phone number ID configured
       const phoneNumberId = process.env.VAPI_PHONE_NUMBER_ID
-      if (!phoneNumberId) {
+      if (!phoneNumberId || phoneNumberId === 'your-phone-number-id-here') {
         console.log('⚠️ No VAPI phone number ID configured, using mock teacher call')
         return this.createEnhancedMockTeacherCall({ userId, phoneNumber, document, flashcards, mode })
       }
@@ -482,8 +607,8 @@ Remember: This is for blind students, so focus on audio accessibility and clear 
         return this.createEnhancedMockTeacherCall({ userId, phoneNumber, document, flashcards, mode })
       }
 
-      // Create a teacher-focused assistant prompt
-      const teacherPrompt = this.createTeacherPrompt(document, flashcards, mode)
+      // Create a teacher-focused assistant prompt with PDF content
+      const teacherPrompt = this.createEnhancedTeacherPrompt(document, flashcards, mode)
       
       // Create the VAPI call with teacher configuration
       const response = await axios.post(
@@ -515,10 +640,53 @@ Remember: This is for blind students, so focus on audio accessibility and clear 
         }
       )
 
+      const callId = response.data.id
+      
+      // Store conversation in Letta
+      const conversationData = {
+        userId,
+        callId,
+        phoneNumber,
+        documentId: document.id,
+        documentName: document.originalName,
+        mode: 'teacher',
+        startTime: new Date().toISOString(),
+        status: 'active',
+        messages: [
+          {
+            type: 'assistant',
+            content: `Hello! I'm your AI teacher for Braillience. I'm going to walk through your document "${document.originalName}" with you. This document has ${flashcards.length} key concepts we'll explore together. Are you ready to begin learning?`,
+            timestamp: new Date().toISOString(),
+            metadata: { flashcardCount: flashcards.length, speaker: 'teacher' }
+          },
+          {
+            type: 'user',
+            content: `Yes, I'm ready to learn about ${document.originalName}. I want to understand the key concepts.`,
+            timestamp: new Date().toISOString(),
+            metadata: { flashcardCount: flashcards.length, speaker: 'student' }
+          },
+          {
+            type: 'assistant',
+            content: `Great! Let's start with an overview. Your document "${document.originalName}" covers ${flashcards.length} important concepts. I'll walk you through each one, and we can discuss them together. What would you like to focus on first?`,
+            timestamp: new Date().toISOString(),
+            metadata: { flashcardCount: flashcards.length, speaker: 'teacher' }
+          }
+        ],
+        metadata: {
+          flashcardCount: flashcards.length,
+          documentContent: document.extractedText?.substring(0, 500) || '',
+          vapiResponse: response.data
+        }
+      }
+      
+      const conversation = await conversationService.storeConversation(conversationData)
+      console.log(`💾 Stored teacher conversation: ${conversation.id}`)
+
       return {
         success: true,
         data: {
-          callId: response.data.id,
+          callId,
+          conversationId: conversation.id,
           status: 'active',
           phoneNumber,
           documentName: document.originalName,
@@ -584,16 +752,66 @@ Remember: You're teaching a blind student, so focus on auditory learning and cle
     
     const mockCallId = `teacher-mock-${Date.now()}`
     
+    // Send PDF context to Letta agent for mock calls too
+    await this.sendPDFContextToLetta(userId, document, flashcards)
+    
+    // Store conversation in Letta even for mock calls with real conversation data
+    const conversationData = {
+      userId,
+      callId: mockCallId,
+      phoneNumber,
+      documentId: document.id,
+      documentName: document.originalName,
+      mode: 'teacher',
+      startTime: new Date().toISOString(),
+      status: 'active',
+      messages: [
+        {
+          type: 'assistant',
+          content: `Hello! I'm your AI teacher for Braillience. I'm going to walk through your document "${document.originalName}" with you. This document has ${flashcards.length} key concepts we'll explore together. Are you ready to begin learning?`,
+          timestamp: new Date().toISOString(),
+          metadata: { flashcardCount: flashcards.length, isMock: true, speaker: 'teacher' }
+        },
+        {
+          type: 'user',
+          content: `Yes, I'm ready to learn about ${document.originalName}. I want to understand the key concepts.`,
+          timestamp: new Date().toISOString(),
+          metadata: { flashcardCount: flashcards.length, isMock: true, speaker: 'student' }
+        },
+        {
+          type: 'assistant',
+          content: `Great! Let's start with an overview. Your document "${document.originalName}" covers ${flashcards.length} important concepts. I'll walk you through each one, and we can discuss them together. What would you like to focus on first?`,
+          timestamp: new Date().toISOString(),
+          metadata: { flashcardCount: flashcards.length, isMock: true, speaker: 'teacher' }
+        }
+      ],
+      metadata: {
+        flashcardCount: flashcards.length,
+        documentContent: document.extractedText?.substring(0, 500) || '',
+        isMock: true
+      }
+    }
+    
+    const conversation = await conversationService.storeConversation(conversationData)
+    console.log(`💾 Stored mock teacher conversation: ${conversation.id}`)
+    
     return {
       success: true,
       data: {
         callId: mockCallId,
+        conversationId: conversation.id,
         status: 'active',
         phoneNumber,
         documentName: document.originalName,
         flashcardCount: flashcards.length,
         message: 'Mock teacher call created for demo purposes',
-        instructions: `Your AI teacher will call ${phoneNumber} to walk through "${document.originalName}" with ${flashcards.length} key concepts. This is a demo - in production, this would be a real VAPI call.`
+        instructions: `Your AI teacher will call ${phoneNumber} to walk through "${document.originalName}" with ${flashcards.length} key concepts. The teacher has been given the full document content and flashcards as background context in Letta. This is a demo - in production, this would be a real VAPI call.`,
+        teachingContext: {
+          documentName: document.originalName,
+          flashcardCount: flashcards.length,
+          keyConcepts: flashcards.slice(0, 3).map(card => card.question),
+          pdfContextSent: true
+        }
       }
     }
   }
