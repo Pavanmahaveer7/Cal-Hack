@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiUser, FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import './Login.css';
@@ -19,7 +20,7 @@ function Login() {
       const result = await login(email, password);
       if (result.success) {
         toast.success('Login successful!');
-        navigate('/');
+        navigate('/dashboard');
       } else {
         toast.error(result.error || 'Login failed');
       }
@@ -36,7 +37,7 @@ function Login() {
       const result = await demoLogin();
       if (result.success) {
         toast.success('Demo login successful!');
-        navigate('/');
+        navigate('/dashboard');
       } else {
         toast.error(result.error || 'Demo login failed');
       }
@@ -49,14 +50,22 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h1 className="login-title">Welcome to Braillience</h1>
-        <p className="login-subtitle">Accessible flashcard learning for blind college students</p>
-        
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-header">
+          <h1 className="login-title">
+            <FiUser className="title-icon" />
+            Professor Login
+          </h1>
+          <p className="login-subtitle">
+            Sign in to manage your course materials and track student progress
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="email" className="form-label">
+              <FiMail className="label-icon" />
               Email Address
             </label>
             <input
@@ -66,15 +75,17 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="form-input"
               required
+              placeholder="Enter your email"
               aria-describedby="email-help"
             />
             <small id="email-help" className="form-help">
-              Enter your email address
+              Use your institutional email address
             </small>
           </div>
 
           <div className="form-group">
             <label htmlFor="password" className="form-label">
+              <FiLock className="label-icon" />
               Password
             </label>
             <input
@@ -84,10 +95,11 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="form-input"
               required
+              placeholder="Enter your password"
               aria-describedby="password-help"
             />
             <small id="password-help" className="form-help">
-              Enter your password
+              Enter your account password
             </small>
           </div>
 
@@ -97,22 +109,32 @@ function Login() {
             className="login-button"
             aria-describedby="login-help"
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? 'Signing In...' : 'Sign In to Dashboard'}
+            <FiArrowRight className="button-icon" />
           </button>
           <small id="login-help" className="form-help">
-            Use any email and password for demo
+            Access your professor dashboard and course materials
           </small>
         </form>
 
         <div className="demo-section">
-          <p className="demo-text">For demo purposes:</p>
+          <p className="demo-text">Quick access for testing:</p>
           <button
             type="button"
             onClick={handleDemoLogin}
             className="demo-button"
           >
-            Use Demo Account
+            Use Demo Professor Account
           </button>
+        </div>
+
+        <div className="login-footer">
+          <p className="register-link-text">
+            New to Braillience?{' '}
+            <Link to="/register" className="register-link">
+              Create Professor Account
+            </Link>
+          </p>
         </div>
       </div>
     </div>

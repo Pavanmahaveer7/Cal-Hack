@@ -1,130 +1,79 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FiBookOpen, FiAward, FiTrendingUp, FiClock, FiTarget, FiVolume2, FiMessageCircle } from 'react-icons/fi';
-import { useVoiceCommands } from '../hooks/useVoiceCommands';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FiUsers, FiFileText, FiPhone, FiBarChart2, FiUpload } from 'react-icons/fi';
+import { useAuth } from '../contexts/AuthContext';
 import './Dashboard.css';
 
 function Dashboard() {
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [stats, setStats] = useState({
-    totalCards: 0,
-    masteredCards: 0,
-    currentStreak: 0,
-    studyTime: 0
+    totalDocuments: 0,
+    totalStudents: 0,
+    totalCalls: 0,
+    activeAssignments: 0
   });
 
   const [recentActivity, setRecentActivity] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [studentCalls, setStudentCalls] = useState([]);
 
-  const handleVoiceCommand = useCallback((command) => {
-    switch (command.toLowerCase()) {
-      case 'start learning':
-      case 'learn':
-        navigate('/learn');
-        break;
-      case 'take test':
-      case 'test':
-        navigate('/test');
-        break;
-      case 'upload pdf':
-      case 'upload document':
-        navigate('/upload');
-        break;
-      case 'study flashcards':
-      case 'flashcards':
-        navigate('/flashcards');
-        break;
-      case 'voice learning':
-      case 'voice study':
-        navigate('/voice-learning');
-        break;
-      case 'view profile':
-      case 'profile':
-        // For now, just show a message
-        alert('Profile feature coming soon!');
-        break;
-      case 'help':
-        speakText('You can say "Start Learning", "Take Test", "Upload PDF", "Study Flashcards", "Voice Learning", "Stop Listening", "Start Listening", or "View Profile".');
-        break;
-      case 'stop listening':
-      case 'stop voice':
-      case 'disable voice':
-        disableContinuousListening();
-        speakText('Voice listening has been disabled. Say "Start Listening" to re-enable.');
-        break;
-      case 'start listening':
-      case 'enable voice':
-      case 'begin listening':
-        enableContinuousListening();
-        speakText('Voice listening has been enabled. I am now listening continuously.');
-        break;
-      default:
-        console.log('Command not recognized:', command);
-    }
-  }, [navigate]);
-
-  const { 
-    startListening, 
-    stopListening, 
-    disableContinuousListening,
-    enableContinuousListening,
-    isSupported, 
-    isListening,
-    isEnabled 
-  } = useVoiceCommands({
-    onCommand: handleVoiceCommand
-  });
 
   useEffect(() => {
-    // Simulate loading user data
-    setStats({
-      totalCards: 156,
-      masteredCards: 89,
-      currentStreak: 7,
-      studyTime: 24
-    });
+    // Load professor data
+    loadProfessorData();
+  }, [user]);
 
-    setRecentActivity([
-      { id: 1, type: 'learned', text: 'Mastered 5 new Spanish words', time: '2 hours ago' },
-      { id: 2, type: 'test', text: 'Completed French vocabulary test', time: '1 day ago' },
-      { id: 3, type: 'learned', text: 'Learned 3 new German phrases', time: '2 days ago' }
-    ]);
-  }, []);
+  const loadProfessorData = async () => {
+    try {
+      // Load documents
+      if (user?.id) {
+        const docsResponse = await fetch(`/api/upload/pdfs/${user.id}`);
+        if (docsResponse.ok) {
+          const result = await docsResponse.json();
+          if (result.success) {
+            setDocuments(result.data);
+            setStats(prev => ({ ...prev, totalDocuments: result.data.length }));
+          }
+        }
+      }
+
+      // Load student calls/conversations
+      const callsResponse = await fetch('/api/conversations');
+      if (callsResponse.ok) {
+        const calls = await callsResponse.json();
+        setStudentCalls(calls);
+        setStats(prev => ({ 
+          ...prev, 
+          totalCalls: calls.length,
+          totalStudents: new Set(calls.map(call => call.phoneNumber)).size
+        }));
+      }
+
+      // Set recent activity
+      setRecentActivity([
+        { id: 1, type: 'upload', text: 'Uploaded "Introduction to Biology" PDF', time: '2 hours ago' },
+        { id: 2, type: 'call', text: 'Student completed AI tutoring session', time: '1 day ago' },
+        { id: 3, type: 'assignment', text: 'Created new assignment for Chemistry class', time: '2 days ago' }
+      ]);
+    } catch (error) {
+      console.error('Error loading professor data:', error);
+    }
+  };
 
   const quickActions = [
     {
-      title: 'Upload PDF',
-      description: 'Upload documents to generate flashcards',
-      icon: FiBookOpen,
+      title: 'Upload Course Materials',
+      description: 'Upload PDFs and documents for your students',
+      icon: FiUpload,
       link: '/upload',
       color: 'primary'
     },
-            {
-              title: 'Voice Learning',
-              description: 'Study with AI voice conversation',
-              icon: FiVolume2,
-              link: '/voice-learning',
-              color: 'secondary'
-            },
-            {
-              title: 'AI Teacher Call',
-              description: 'Get a personal AI teacher call',
-              icon: FiVolume2,
-              link: '/vapi-teacher',
-              color: 'accent'
-            },
-            {
-              title: 'Conversations',
-              description: 'View your learning conversation history',
-              icon: FiMessageCircle,
-              link: '/conversations',
-              color: 'secondary'
-            },
     {
-      title: 'Study Flashcards',
-      description: 'Study your generated flashcards',
-      icon: FiBookOpen,
-      link: '/flashcards',
-      color: 'accent'
+      title: 'AI Phone Tutoring',
+      description: 'Set up AI phone calls for student learning',
+      icon: FiPhone,
+      link: '/voice',
+      color: 'secondary'
     }
   ];
 
@@ -132,79 +81,54 @@ function Dashboard() {
     <div className="dashboard">
       <div className="container">
         <div className="dashboard-header">
-          <h1 className="dashboard-title">Welcome back!</h1>
+          <h1 className="dashboard-title">Welcome back, {user?.name || 'Professor'}!</h1>
           <p className="dashboard-subtitle">
-            Ready to continue your learning journey?
+            Manage your course materials and track student progress
           </p>
           
-          {/* Voice Interface */}
-          <div className="voice-interface" role="region" aria-label="Voice Commands">
-            <p className="voice-instructions">
-              {isEnabled ? 
-                '🎤 Continuous listening active! Say "Voice Learning", "Study Flashcards", "Upload PDF", "Stop Listening", or "Help"' :
-                'Voice listening is disabled. Say "Start Listening" to enable continuous voice commands.'
-              }
-            </p>
-            <div className="voice-controls">
-              <button
-                onClick={isEnabled ? disableContinuousListening : enableContinuousListening}
-                disabled={!isSupported}
-                className={`voice-button ${isEnabled ? 'stop' : 'start'}`}
-                aria-label={isEnabled ? 'Disable continuous voice recognition' : 'Enable continuous voice recognition'}
-              >
-                <FiVolume2 className="voice-icon" />
-                {isSupported ? (isEnabled ? 'Disable Voice' : 'Enable Voice') : 'Voice Not Supported'}
-              </button>
-              <div className="voice-status">
-                <span className={`status-indicator ${isEnabled ? 'active' : 'inactive'}`}>
-                  {isEnabled ? '🟢 Listening' : '🔴 Disabled'}
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Stats Overview */}
         <section className="stats-section" aria-labelledby="stats-heading">
-          <h2 id="stats-heading" className="section-title">Your Progress</h2>
+          <h2 id="stats-heading" className="section-title">Course Overview</h2>
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon">
-                <FiBookOpen />
+                <FiFileText />
               </div>
               <div className="stat-content">
-                <div className="stat-number">{stats.totalCards}</div>
-                <div className="stat-label">Total Cards</div>
+                <div className="stat-number">{stats.totalDocuments}</div>
+                <div className="stat-label">Course Materials</div>
               </div>
             </div>
             
             <div className="stat-card">
               <div className="stat-icon">
-                <FiAward />
+                <FiUsers />
               </div>
               <div className="stat-content">
-                <div className="stat-number">{stats.masteredCards}</div>
-                <div className="stat-label">Mastered</div>
+                <div className="stat-number">{stats.totalStudents}</div>
+                <div className="stat-label">Active Students</div>
               </div>
             </div>
             
             <div className="stat-card">
               <div className="stat-icon">
-                <FiTarget />
+                <FiPhone />
               </div>
               <div className="stat-content">
-                <div className="stat-number">{stats.currentStreak}</div>
-                <div className="stat-label">Day Streak</div>
+                <div className="stat-number">{stats.totalCalls}</div>
+                <div className="stat-label">AI Tutoring Sessions</div>
               </div>
             </div>
             
             <div className="stat-card">
               <div className="stat-icon">
-                <FiClock />
+                <FiBarChart2 />
               </div>
               <div className="stat-content">
-                <div className="stat-number">{stats.studyTime}h</div>
-                <div className="stat-label">Study Time</div>
+                <div className="stat-number">{stats.activeAssignments}</div>
+                <div className="stat-label">Active Assignments</div>
               </div>
             </div>
           </div>
@@ -245,7 +169,9 @@ function Dashboard() {
             {recentActivity.map((activity) => (
               <div key={activity.id} className="activity-item">
                 <div className={`activity-icon ${activity.type}`}>
-                  {activity.type === 'learned' ? <FiBookOpen /> : <FiAward />}
+                  {activity.type === 'upload' ? <FiUpload /> : 
+                   activity.type === 'call' ? <FiPhone /> : 
+                   activity.type === 'assignment' ? <FiFileText /> : <FiBookOpen />}
                 </div>
                 <div className="activity-content">
                   <p className="activity-text">{activity.text}</p>
@@ -253,6 +179,33 @@ function Dashboard() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Course Materials */}
+        <section className="materials-section" aria-labelledby="materials-heading">
+          <h2 id="materials-heading" className="section-title">Course Materials</h2>
+          <div className="materials-grid">
+            {documents.slice(0, 4).map((doc) => (
+              <div key={doc.id} className="material-card">
+                <div className="material-icon">
+                  <FiFileText />
+                </div>
+                <div className="material-content">
+                  <h3 className="material-title">{doc.fileName}</h3>
+                  <p className="material-meta">
+                    {doc.flashcardCount} flashcards • {new Date(doc.uploadDate).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+            {documents.length === 0 && (
+              <div className="no-materials">
+                <FiFileText className="no-materials-icon" />
+                <p>No course materials uploaded yet</p>
+                <Link to="/upload" className="upload-link">Upload your first document</Link>
+              </div>
+            )}
           </div>
         </section>
       </div>

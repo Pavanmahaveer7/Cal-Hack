@@ -3,6 +3,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
 const rateLimit = require('express-rate-limit')
+const path = require('path')
 const database = require('./config/database')
 require('dotenv').config()
 
@@ -16,6 +17,9 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
 }))
+
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, '../public')))
 
 // Rate limiting
 const limiter = rateLimit({
@@ -58,9 +62,9 @@ app.use((err, req, res, next) => {
   })
 })
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' })
+// Catch-all handler: send back React's index.html file for any non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'))
 })
 
 // Start server with database connection

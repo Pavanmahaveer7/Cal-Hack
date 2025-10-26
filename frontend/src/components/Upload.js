@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiUpload, FiFile, FiCheck, FiX, FiVolume2 } from 'react-icons/fi';
-import { useVoiceCommands } from '../hooks/useVoiceCommands';
+import { FiUpload, FiFile, FiCheck, FiX } from 'react-icons/fi';
 import './Upload.css';
 
 function Upload() {
@@ -11,28 +10,6 @@ function Upload() {
   const [uploadStatus, setUploadStatus] = useState(null);
   const [dragActive, setDragActive] = useState(false);
 
-  const handleVoiceCommand = useCallback((command) => {
-    switch (command.toLowerCase()) {
-      case 'go back':
-      case 'return home':
-        navigate('/');
-        break;
-      case 'start learning':
-      case 'learn':
-        navigate('/learn');
-        break;
-      case 'take test':
-      case 'test':
-        navigate('/test');
-        break;
-      default:
-        console.log('Command not recognized:', command);
-    }
-  }, [navigate]);
-
-  const { startListening, stopListening, isSupported } = useVoiceCommands({
-    onCommand: handleVoiceCommand
-  });
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -80,7 +57,8 @@ function Upload() {
       formData.append('pdf', file);
       formData.append('userId', 'demo-user');
 
-      const response = await fetch('http://localhost:3001/api/upload/pdf', {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_BASE_URL}/api/upload/pdf`, {
         method: 'POST',
         body: formData,
       });
@@ -128,30 +106,6 @@ function Upload() {
             Upload a PDF to generate AI-powered flashcards for studying
           </p>
 
-          {/* Voice Interface */}
-          <div className="voice-interface" role="region" aria-label="Voice Commands">
-            <p className="voice-instructions">
-              Say "Go Back", "Start Learning", or "Take Test" to navigate
-            </p>
-            <div className="voice-controls">
-              <button
-                onClick={startListening}
-                disabled={!isSupported}
-                className="voice-button"
-                aria-label="Start voice recognition"
-              >
-                <FiVolume2 className="voice-icon" />
-                {isSupported ? 'Start Listening' : 'Voice Not Supported'}
-              </button>
-              <button
-                onClick={stopListening}
-                className="voice-button stop"
-                aria-label="Stop voice recognition"
-              >
-                Stop
-              </button>
-            </div>
-          </div>
         </div>
 
         <div className="upload-area">

@@ -7,7 +7,7 @@ const router = express.Router()
 // Mock user database for hackathon
 const users = [
   {
-    id: 'user-1',
+    id: 'demo-user',
     email: 'demo@braillience.com',
     name: 'Demo User',
     password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -22,14 +22,14 @@ const users = [
   }
 ]
 
-// Register new user
+// Register new professor
 router.post('/register', async (req, res) => {
   try {
-    const { email, name, password } = req.body
+    const { email, name, password, institution, department, title, role } = req.body
 
-    if (!email || !name || !password) {
+    if (!email || !name || !password || !institution || !department) {
       return res.status(400).json({ 
-        error: 'Email, name, and password are required' 
+        error: 'Email, name, password, institution, and department are required' 
       })
     }
 
@@ -37,19 +37,23 @@ router.post('/register', async (req, res) => {
     const existingUser = users.find(user => user.email === email)
     if (existingUser) {
       return res.status(400).json({ 
-        error: 'User with this email already exists' 
+        error: 'Professor with this email already exists' 
       })
     }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create new user
+    // Create new professor
     const newUser = {
-      id: `user-${Date.now()}`,
+      id: `prof-${Date.now()}`,
       email,
       name,
       password: hashedPassword,
+      institution,
+      department,
+      title: title || '',
+      role: role || 'professor',
       createdAt: new Date().toISOString(),
       preferences: {
         voiceRate: 0.9,
@@ -64,7 +68,7 @@ router.post('/register', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: newUser.id, email: newUser.email },
+      { userId: newUser.id, email: newUser.email, role: newUser.role },
       process.env.JWT_SECRET || 'hackathon-secret',
       { expiresIn: '7d' }
     )
@@ -76,17 +80,21 @@ router.post('/register', async (req, res) => {
           id: newUser.id,
           email: newUser.email,
           name: newUser.name,
+          institution: newUser.institution,
+          department: newUser.department,
+          title: newUser.title,
+          role: newUser.role,
           preferences: newUser.preferences
         },
         token
       },
-      message: 'User registered successfully'
+      message: 'Professor account created successfully'
     })
 
   } catch (error) {
-    console.error('Error registering user:', error)
+    console.error('Error registering professor:', error)
     res.status(500).json({ 
-      error: 'Failed to register user',
+      error: 'Failed to register professor',
       message: error.message 
     })
   }

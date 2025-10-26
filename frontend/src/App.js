@@ -2,18 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Login from './components/Login';
+import Register from './components/Register';
+import Home from './components/Home';
 import Dashboard from './components/Dashboard';
-import Learn from './components/Learn';
-import Test from './components/Test';
+import About from './components/About';
 import Upload from './components/Upload';
-import Flashcards from './components/Flashcards';
-import VoiceLearning from './components/VoiceLearning';
 import VAPITeacher from './components/VAPITeacher';
-import Conversations from './components/Conversations';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { VoiceProvider } from './components/voice/VoiceProvider';
 import './App.css';
 
 function AppContent() {
@@ -33,15 +30,13 @@ function AppContent() {
       <Header />
       <main className="main-content">
         <Routes>
-          <Route path="/" element={user ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-          <Route path="/learn" element={user ? <Learn /> : <Navigate to="/login" />} />
-          <Route path="/test" element={user ? <Test /> : <Navigate to="/login" />} />
-                  <Route path="/upload" element={user ? <Upload /> : <Navigate to="/login" />} />
-                  <Route path="/flashcards" element={user ? <Flashcards /> : <Navigate to="/login" />} />
-                  <Route path="/voice-learning" element={user ? <VoiceLearning /> : <Navigate to="/login" />} />
-                  <Route path="/vapi-teacher" element={user ? <VAPITeacher /> : <Navigate to="/login" />} />
-                  <Route path="/conversations" element={user ? <Conversations /> : <Navigate to="/login" />} />
+          <Route path="/" element={user ? <Dashboard /> : <Home />} />
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
+          <Route path="/register" element={!user ? <Register /> : <Navigate to="/dashboard" />} />
+          <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/upload" element={user ? <Upload /> : <Navigate to="/login" />} />
+          <Route path="/voice" element={user ? <VAPITeacher /> : <Navigate to="/login" />} />
         </Routes>
       </main>
       <Footer />
@@ -61,11 +56,9 @@ function AppContent() {
 
 function App() {
   return (
-    <VoiceProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </VoiceProvider>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

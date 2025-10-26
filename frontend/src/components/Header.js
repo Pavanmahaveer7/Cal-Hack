@@ -9,34 +9,53 @@ function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="header-brand">
-          <Link to="/" className="brand-link">
-            <h1 className="brand-title">Braillience</h1>
-            <span className="brand-subtitle">Accessible Learning</span>
-          </Link>
-        </div>
+                <div className="header-brand">
+                  <Link to="/" className="brand-link" aria-label="Braillience Home">
+                    <div className="brand-logo">
+                      <div className="logo-container">
+                        <div className="brain-icon">🧠</div>
+                      </div>
+                      <div className="brand-text">
+                        <h1 className="brand-title">Braillience</h1>
+                        <span className="brand-subtitle">AI-Powered Learning</span>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
 
-        {user && (
-          <nav className="header-nav" role="navigation" aria-label="Main navigation">
-            <ul className="nav-list">
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/learn" className="nav-link">
-                  Learn
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/test" className="nav-link">
-                  Test
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        )}
+        <nav className="header-nav" role="navigation" aria-label="Main navigation">
+          <ul className="nav-list">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/about" className="nav-link">
+                About
+              </Link>
+            </li>
+            {user && (
+              <>
+                <li className="nav-item">
+                  <Link to="/dashboard" className="nav-link">
+                    Dashboard
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/upload" className="nav-link">
+                    Upload
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/voice" className="nav-link">
+                    Voice
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </nav>
 
         <div className="header-actions">
           {user ? (

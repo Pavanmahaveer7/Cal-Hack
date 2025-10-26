@@ -19,7 +19,16 @@ function VAPITeacher() {
 
   const fetchAvailableDocuments = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/upload/pdfs/demo-user');
+      // Get the current user ID from localStorage
+      const userData = localStorage.getItem('user');
+      if (!userData) {
+        console.error('No user data found');
+        return;
+      }
+      
+      const user = JSON.parse(userData);
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_BASE_URL}/api/upload/pdfs/${user.id}`);
       const result = await response.json();
       
       if (result.success) {
@@ -48,16 +57,19 @@ function VAPITeacher() {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/voice-learning/start-teacher-call', {
+      // Get the current user ID from localStorage
+      const userData = localStorage.getItem('user');
+      const user = userData ? JSON.parse(userData) : { id: 'demo-user' };
+      
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_BASE_URL}/api/voice-learning/start-teacher-call`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: 'demo-user',
           phoneNumber: userPhone,
-          documentId: selectedDocument,
-          mode: 'teacher'
+          documentId: selectedDocument
         })
       });
 
@@ -84,7 +96,8 @@ function VAPITeacher() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/voice-learning/end-teacher-call', {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_BASE_URL}/api/voice-learning/end-teacher-call`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

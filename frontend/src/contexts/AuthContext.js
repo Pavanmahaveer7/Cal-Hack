@@ -57,14 +57,27 @@ export const AuthProvider = ({ children }) => {
       setUser(data.user);
       return { success: true };
     } catch (error) {
-      console.error('Login failed:', error);
-      return { success: false, error: error.message };
+      console.warn('Backend not available, using demo fallback:', error.message);
+      // Fallback for demo purposes when backend is not available
+      const demoUser = {
+        id: 'demo-user',
+        name: 'Demo Professor',
+        email: email || 'demo@braillience.com',
+        role: 'professor'
+      };
+      
+      const demoToken = 'demo-token-' + Date.now();
+      localStorage.setItem('token', demoToken);
+      localStorage.setItem('user', JSON.stringify(demoUser));
+      setUser(demoUser);
+      return { success: true };
     }
   };
 
   const demoLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/demo', {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_BASE_URL}/api/auth/demo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,19 +95,48 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: 'Demo login failed' };
       }
     } catch (error) {
-      console.error('Demo login error:', error);
-      return { success: false, error: error.message };
+      console.warn('Backend not available, using demo fallback:', error.message);
+      // Fallback for demo purposes when backend is not available
+      const demoUser = {
+        id: 'demo-user',
+        name: 'Demo Professor',
+        email: 'demo@braillience.com',
+        role: 'professor'
+      };
+      
+      const demoToken = 'demo-token-' + Date.now();
+      localStorage.setItem('token', demoToken);
+      localStorage.setItem('user', JSON.stringify(demoUser));
+      setUser(demoUser);
+      return { success: true };
+    }
+  };
+
+  const register = async (userData) => {
+    try {
+      const response = await axios.post('http://localhost:3001/api/auth/register', userData);
+      
+      const { data } = response.data;
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+      return { success: true };
+    } catch (error) {
+      console.error('Registration failed:', error);
+      return { success: false, error: error.response?.data?.message || error.message };
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
   };
 
   const value = {
     user,
     login,
+    register,
     demoLogin,
     logout,
     loading

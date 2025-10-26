@@ -1,6 +1,6 @@
 .vapi-teacher-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-hero);
   padding: 2rem 0;
 }
 
@@ -31,11 +31,12 @@
 }
 
 .call-setup {
-  background: white;
-  border-radius: 16px;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
   padding: 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-tech);
   margin-bottom: 2rem;
+  border: 1px solid hsl(var(--border));
 }
 
 .setup-section {
@@ -43,7 +44,7 @@
 }
 
 .setup-section h3 {
-  color: #333;
+  color: hsl(var(--foreground));
   margin-bottom: 1rem;
   font-size: 1.2rem;
   font-weight: 600;
@@ -52,66 +53,71 @@
 .phone-input {
   width: 100%;
   padding: 1rem;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
+  border: 2px solid hsl(var(--input));
+  border-radius: var(--radius);
   font-size: 1.1rem;
-  transition: border-color 0.3s ease;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  transition: var(--transition-smooth);
 }
 
 .phone-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
 }
 
 .help-text {
   margin-top: 0.5rem;
-  color: #666;
+  color: hsl(var(--muted-foreground));
   font-size: 0.9rem;
 }
 
 .document-select {
   width: 100%;
   padding: 1rem;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
+  border: 2px solid hsl(var(--input));
+  border-radius: var(--radius);
   font-size: 1.1rem;
-  background: white;
-  transition: border-color 0.3s ease;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  transition: var(--transition-smooth);
 }
 
 .document-select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
 }
 
 .no-documents {
   text-align: center;
   padding: 2rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 2px dashed #dee2e6;
+  background: hsl(var(--muted));
+  border-radius: var(--radius);
+  border: 2px dashed hsl(var(--border));
 }
 
 .no-documents p {
-  color: #666;
+  color: hsl(var(--muted-foreground));
   margin-bottom: 1rem;
 }
 
 .upload-button {
-  background: #667eea;
-  color: white;
+  background: var(--gradient-accent);
+  color: hsl(var(--primary-foreground));
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-tech);
 }
 
 .upload-button:hover {
-  background: #5a6fd8;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
 }
 
 .call-actions {
@@ -120,11 +126,11 @@
 }
 
 .start-call-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--gradient-accent);
+  color: hsl(var(--primary-foreground));
   border: none;
   padding: 1rem 2rem;
-  border-radius: 12px;
+  border-radius: var(--radius);
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
@@ -132,13 +138,13 @@
   align-items: center;
   gap: 0.5rem;
   margin: 0 auto;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-tech);
 }
 
 .start-call-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  box-shadow: var(--shadow-glow);
 }
 
 .start-call-button:disabled {
@@ -148,11 +154,12 @@
 }
 
 .active-call {
-  background: white;
-  border-radius: 16px;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
   padding: 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-tech);
   margin-bottom: 2rem;
+  border: 1px solid hsl(var(--border));
 }
 
 .call-status {
@@ -165,14 +172,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #d4edda;
-  color: #155724;
+  background: hsl(var(--success) / 0.1);
+  color: hsl(var(--success));
   padding: 1rem 2rem;
-  border-radius: 12px;
+  border-radius: var(--radius);
   font-weight: 600;
   font-size: 1.1rem;
   margin-bottom: 1rem;
-  border: 1px solid #c3e6cb;
+  border: 1px solid hsl(var(--success) / 0.2);
 }
 
 .status-icon {
@@ -187,35 +194,36 @@
 }
 
 .call-info {
-  color: #666;
+  color: hsl(var(--muted-foreground));
   font-size: 1.1rem;
   line-height: 1.6;
 }
 
 .call-details {
-  background: #f8f9fa;
+  background: hsl(var(--muted));
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius);
   margin-bottom: 2rem;
+  border: 1px solid hsl(var(--border));
 }
 
 .call-details h4 {
-  color: #333;
+  color: hsl(var(--foreground));
   margin-bottom: 1rem;
   font-size: 1.1rem;
 }
 
 .call-details p {
   margin: 0.5rem 0;
-  color: #666;
+  color: hsl(var(--muted-foreground));
 }
 
 .end-call-button {
-  background: #dc3545;
-  color: white;
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
   border: none;
   padding: 1rem 2rem;
-  border-radius: 12px;
+  border-radius: var(--radius);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -223,12 +231,14 @@
   align-items: center;
   gap: 0.5rem;
   margin: 0 auto;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-tech);
 }
 
 .end-call-button:hover:not(:disabled) {
-  background: #c82333;
+  background: hsl(var(--destructive) / 0.9);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
 .end-call-button:disabled {
@@ -238,14 +248,15 @@
 }
 
 .teacher-features {
-  background: white;
-  border-radius: 16px;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
   padding: 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-tech);
+  border: 1px solid hsl(var(--border));
 }
 
 .teacher-features h3 {
-  color: #333;
+  color: hsl(var(--foreground));
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
   font-weight: 600;
@@ -258,9 +269,9 @@
 
 .teacher-features li {
   padding: 0.75rem 0;
-  color: #666;
+  color: hsl(var(--muted-foreground));
   font-size: 1.1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .teacher-features li:last-child {
@@ -268,12 +279,12 @@
 }
 
 .error-message {
-  background: #f8d7da;
-  color: #721c24;
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius);
   margin-bottom: 1rem;
-  border: 1px solid #f5c6cb;
+  border: 1px solid hsl(var(--destructive) / 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -282,16 +293,16 @@
 .dismiss-button {
   background: none;
   border: none;
-  color: #721c24;
+  color: hsl(var(--destructive));
   cursor: pointer;
   font-weight: 600;
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  border-radius: var(--radius);
+  transition: var(--transition-smooth);
 }
 
 .dismiss-button:hover {
-  background: rgba(114, 28, 36, 0.1);
+  background: hsl(var(--destructive) / 0.1);
 }
 
 .spinner {

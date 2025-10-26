@@ -1,6 +1,6 @@
 .upload-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-hero);
   padding: 2rem 0;
 }
 
@@ -13,54 +13,57 @@
 .upload-header {
   text-align: center;
   margin-bottom: 3rem;
-  color: white;
+  color: hsl(var(--primary-foreground));
 }
 
 .upload-title {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-balance: balance;
 }
 
 .upload-subtitle {
   font-size: 1.2rem;
   opacity: 0.9;
   margin-bottom: 2rem;
+  font-weight: 500;
 }
 
 .upload-area {
-  background: white;
-  border-radius: 16px;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
   padding: 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid hsl(var(--border));
   margin-bottom: 2rem;
 }
 
 .drop-zone {
-  border: 3px dashed #e2e8f0;
-  border-radius: 12px;
+  border: 3px dashed hsl(var(--border));
+  border-radius: var(--radius);
   padding: 3rem 2rem;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  background: #f8fafc;
+  transition: var(--transition-smooth);
+  background: hsl(var(--muted) / 0.3);
 }
 
 .drop-zone:hover {
-  border-color: #667eea;
-  background: #f1f5f9;
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.05);
 }
 
 .drop-zone.drag-active {
-  border-color: #667eea;
-  background: #e0e7ff;
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
   transform: scale(1.02);
 }
 
 .drop-zone.has-file {
-  border-color: #10b981;
-  background: #ecfdf5;
+  border-color: hsl(var(--success));
+  background: hsl(var(--success) / 0.05);
 }
 
 .drop-zone-content {
@@ -72,35 +75,38 @@
 
 .upload-icon {
   font-size: 3rem;
-  color: #667eea;
+  color: hsl(var(--primary));
   margin-bottom: 1rem;
 }
 
 .drop-zone h3 {
   font-size: 1.5rem;
-  color: #374151;
+  color: hsl(var(--foreground));
   margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 .drop-zone p {
-  color: #6b7280;
+  color: hsl(var(--muted-foreground));
   margin-bottom: 1.5rem;
+  font-weight: 500;
 }
 
 .browse-button {
-  background: #667eea;
-  color: white;
+  background: var(--gradient-hero);
+  color: hsl(var(--primary-foreground));
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: var(--radius);
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-tech);
 }
 
 .browse-button:hover {
-  background: #5a67d8;
   transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
 .file-selected {
@@ -108,41 +114,46 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: #ecfdf5;
-  border-radius: 8px;
-  border: 2px solid #10b981;
+  background: hsl(var(--success) / 0.05);
+  border-radius: var(--radius);
+  border: 2px solid hsl(var(--success));
 }
 
 .file-icon {
   font-size: 2rem;
-  color: #10b981;
+  color: hsl(var(--success));
 }
 
 .file-info h3 {
-  color: #374151;
+  color: hsl(var(--foreground));
   margin: 0;
   font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .file-info p {
-  color: #6b7280;
+  color: hsl(var(--muted-foreground));
   margin: 0;
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .remove-file {
-  background: #ef4444;
-  color: white;
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
   border: none;
   padding: 0.5rem;
-  border-radius: 6px;
+  border-radius: var(--radius);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
   margin-left: auto;
+  box-shadow: var(--shadow-sm);
 }
 
 .remove-file:hover {
-  background: #dc2626;
+  background: hsl(var(--destructive) / 0.9);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .upload-actions {
@@ -151,28 +162,31 @@
 }
 
 .upload-button {
-  background: #10b981;
-  color: white;
+  background: var(--gradient-accent);
+  color: hsl(var(--accent-foreground));
   border: none;
   padding: 1rem 2rem;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: var(--shadow-tech);
 }
 
 .upload-button:hover:not(:disabled) {
-  background: #059669;
   transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
 .upload-button:disabled {
-  background: #9ca3af;
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .spinner {
@@ -200,15 +214,15 @@
 }
 
 .upload-status.success {
-  background: #ecfdf5;
-  color: #065f46;
-  border: 1px solid #10b981;
+  background: hsl(var(--success) / 0.1);
+  color: hsl(var(--success));
+  border: 1px solid hsl(var(--success));
 }
 
 .upload-status.error {
-  background: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #ef4444;
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+  border: 1px solid hsl(var(--destructive));
 }
 
 .status-icon {
@@ -216,22 +230,25 @@
 }
 
 .upload-info {
-  background: white;
-  border-radius: 12px;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
   padding: 2rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid hsl(var(--border));
 }
 
 .upload-info h3 {
-  color: #374151;
+  color: hsl(var(--foreground));
   margin-bottom: 1rem;
   font-size: 1.3rem;
+  font-weight: 700;
 }
 
 .upload-info ol {
-  color: #6b7280;
+  color: hsl(var(--muted-foreground));
   line-height: 1.6;
   padding-left: 1.5rem;
+  font-weight: 500;
 }
 
 .upload-info li {
