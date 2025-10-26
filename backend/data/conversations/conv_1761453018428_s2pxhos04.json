@@ -1,0 +1,87 @@
+{
+  "id": "conv_1761453018428_s2pxhos04",
+  "userId": "demo-user",
+  "callId": "019a1ec7-f8f0-7bbd-9d7d-08a6a33514d0",
+  "phoneNumber": "+16506844796",
+  "documentId": 22,
+  "documentName": "Notes From the ACM Paper.pdf",
+  "mode": "teacher",
+  "startTime": "2025-10-26T04:30:18.428Z",
+  "status": "active",
+  "messages": [
+    {
+      "type": "assistant",
+      "content": "Hello! I'm your AI teacher for Braillience. I'm going to walk through your document \"Notes From the ACM Paper.pdf\" with you. This document has 10 key concepts we'll explore together. Are you ready to begin learning?",
+      "timestamp": "2025-10-26T04:30:18.428Z",
+      "metadata": {
+        "flashcardCount": 10,
+        "speaker": "teacher"
+      }
+    },
+    {
+      "type": "user",
+      "content": "Yes, I'm ready to learn about Notes From the ACM Paper.pdf. I want to understand the key concepts.",
+      "timestamp": "2025-10-26T04:30:18.428Z",
+      "metadata": {
+        "flashcardCount": 10,
+        "speaker": "student"
+      }
+    },
+    {
+      "type": "assistant",
+      "content": "Great! Let's start with an overview. Your document \"Notes From the ACM Paper.pdf\" covers 10 important concepts. I'll walk you through each one, and we can discuss them together. What would you like to focus on first?",
+      "timestamp": "2025-10-26T04:30:18.428Z",
+      "metadata": {
+        "flashcardCount": 10,
+        "speaker": "teacher"
+      }
+    }
+  ],
+  "metadata": {
+    "flashcardCount": 10,
+    "documentContent": "\n\n=== DOCUMENT METADATA ===\nOriginal Filename: Notes From the ACM Paper.pdf\nUpload Date: 2025-10-26T04:25:48.859Z\nDocument ID: 1761452748859\n========================\n\n\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\nTeacher, But Also Student: Challenges and Tech Needs of Adult Braille Learners \nwith Sight \nANONYMOUS AUTHOR(S) \nBraille literacy is critical for blind individuals’ independence and qu",
+    "vapiResponse": {
+      "id": "019a1ec7-f8f0-7bbd-9d7d-08a6a33514d0",
+      "assistantId": "5c45bdff-f5cd-45f5-9a6e-cf03665b0073",
+      "phoneNumberId": "1906f7d6-a43c-4bf6-b317-b0402ebc3c28",
+      "type": "outboundPhoneCall",
+      "createdAt": "2025-10-26T04:30:13.232Z",
+      "updatedAt": "2025-10-26T04:30:18.409Z",
+      "orgId": "4c74e8c2-226e-4a2b-ab42-577a32c7607c",
+      "cost": 0,
+      "customer": {
+        "name": "Student demo-user",
+        "number": "+16506844796"
+      },
+      "status": "queued",
+      "maxDurationSeconds": 3600,
+      "metadata": {
+        "mode": "teacher",
+        "userId": "demo-user",
+        "documentId": 22,
+        "documentName": "Notes From the ACM Paper.pdf",
+        "flashcardCount": 10
+      },
+      "phoneCallProvider": "vapi",
+      "phoneCallProviderId": "85ec11b8-dc06-498c-b4f1-a4a1f6535904",
+      "phoneCallTransport": "pstn",
+      "phoneCallProviderDetails": {
+        "sbcCallId": "516001ac-2cc7-123f-44b1-0aea14c827b7"
+      },
+      "assistantOverrides": {
+        "firstMessage": "Hello! I'm your AI teacher for Braillience. I'm going to walk through your document \"Notes From the ACM Paper.pdf\" with you. This document has 10 key concepts we'll explore together. Are you ready to begin learning?"
+      },
+      "monitor": {
+        "listenUrl": "wss://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/019a1ec7-f8f0-7bbd-9d7d-08a6a33514d0/listen",
+        "controlUrl": "https://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/019a1ec7-f8f0-7bbd-9d7d-08a6a33514d0/control"
+      },
+      "transport": {
+        "callSid": "85ec11b8-dc06-498c-b4f1-a4a1f6535904",
+        "provider": "vapi.sip",
+        "sbcCallSid": "516001ac-2cc7-123f-44b1-0aea14c827b7"
+      }
+    }
+  },
+  "createdAt": "2025-10-26T04:30:18.428Z",
+  "updatedAt": "2025-10-26T04:30:18.428Z"
+}

@@ -12,8 +12,7 @@ class LettaService {
     
     if (this.apiKey && this.apiKey !== 'your-letta-api-key-here') {
       this.client = new LettaClient({
-        token: this.apiKey,
-        project: this.project,
+        token: this.apiKey
       });
       console.log('🤖 Letta Service initialized with official SDK');
     } else {
@@ -31,28 +30,28 @@ class LettaService {
   }
 
   /**
-   * Create a stateful agent for a user
-   * @param {string} userId - The user ID
-   * @param {Object} userContext - User's learning context
+   * Create a single shared Letta agent for all users
+   * @param {string} agentCode - The agent code you provide
    * @returns {Promise<string>} - Agent ID
    */
-  async createUserAgent(userId, userContext = {}) {
+  async createSharedAgent(agentCode = null) {
     try {
       if (!this.isConfigured()) {
         throw new Error('Letta not configured');
       }
 
-      const agentData = {
+      // Use your provided agent code, or fallback to default
+      const agentData = agentCode || {
         model: 'openai/gpt-4o',
         embedding: 'openai/text-embedding-3-small',
         memoryBlocks: [
           {
-            label: 'user_profile',
-            value: `User ID: ${userId}. Learning style: ${userContext.preferredLearningStyle || 'visual'}. Mastery level: ${userContext.masteryLevel || 'beginner'}.`
+            label: 'braillience_context',
+            value: 'This is a Braillience learning assistant for blind college students. Focus on accessibility, patience, and adaptive teaching.'
           },
           {
-            label: 'learning_context',
-            value: `This is a Braillience learning assistant for blind college students. Focus on accessibility, patience, and adaptive teaching.`
+            label: 'learning_materials',
+            value: 'PDF documents and learning materials will be stored here for teaching context.'
           },
           {
             label: 'conversation_history',
@@ -70,57 +69,58 @@ Your role is to:
 5. Provide personalized greetings based on learning history
 6. Track learning progress and adapt teaching strategies
 
-Student Context:
-- Learning Style: ${userContext.preferredLearningStyle || 'visual'}
-- Mastery Level: ${userContext.masteryLevel || 'beginner'}
-- Previous Sessions: ${userContext.totalConversations || 0}
-- Strengths: ${userContext.strengths?.join(', ') || 'Building confidence'}
-- Areas for Improvement: ${userContext.weaknesses?.join(', ') || 'General practice'}
-
 Always be encouraging, patient, and adaptive to the student's needs.`
       };
 
       const agent = await this.client.agents.create(agentData);
-      console.log(`🤖 Created Letta agent for user: ${userId}`);
+      console.log(`🤖 Created shared Letta agent`);
       return agent.id;
     } catch (error) {
-      console.error('❌ Error creating Letta agent:', error);
+      console.error('❌ Error creating shared Letta agent:', error);
       throw error;
     }
   }
 
   /**
-   * Get or create a user's Letta agent
+   * Create a stateful agent for a user (legacy method)
    * @param {string} userId - The user ID
    * @param {Object} userContext - User's learning context
    * @returns {Promise<string>} - Agent ID
    */
-  async getUserAgent(userId, userContext = {}) {
+  async createUserAgent(userId, userContext = {}) {
+    // For now, just return the shared agent
+    return this.getSharedAgent();
+  }
+
+  /**
+   * Get or create the shared Letta agent
+   * @returns {Promise<string>} - Agent ID
+   */
+  async getSharedAgent() {
     try {
       if (!this.isConfigured()) {
         throw new Error('Letta not configured');
       }
 
-      // Try to find existing agent for this user
-      const agents = await this.client.agents.list();
-      const userAgent = agents.find(agent => 
-        agent.memoryBlocks?.some(block => 
-          block.label === 'user_profile' && 
-          block.value.includes(`User ID: ${userId}`)
-        )
-      );
-
-      if (userAgent) {
-        console.log(`🤖 Found existing Letta agent for user: ${userId}`);
-        return userAgent.id;
-      }
-
-      // Create new agent if none exists
-      return await this.createUserAgent(userId, userContext);
+      // Use the specified shared agent ID
+      const sharedAgentId = 'agent-458e17dd-b0f9-4d25-a1a9-6e57e1042ce1';
+      console.log(`🤖 Using specified shared Letta agent: ${sharedAgentId}`);
+      return sharedAgentId;
     } catch (error) {
-      console.error('❌ Error getting user agent:', error);
+      console.error('❌ Error getting shared agent:', error);
       throw error;
     }
+  }
+
+  /**
+   * Get or create a user's Letta agent (now uses shared agent)
+   * @param {string} userId - The user ID
+   * @param {Object} userContext - User's learning context
+   * @returns {Promise<string>} - Agent ID
+   */
+  async getUserAgent(userId, userContext = {}) {
+    // For now, just return the shared agent
+    return this.getSharedAgent();
   }
 
   /**
@@ -178,6 +178,86 @@ Always be encouraging, patient, and adaptive to the student's needs.`
   }
 
   /**
+   * Create a folder for storing PDF documents
+   * @param {string} folderName - Name for the folder
+   * @param {string} description - Description of the folder
+   * @returns {Promise<string>} - Folder ID
+   */
+  async createDocumentFolder(folderName, description) {
+    try {
+      if (!this.isConfigured()) {
+        throw new Error('Letta not configured');
+      }
+
+      // For Letta Cloud API, create folder with minimal config
+      const folder = await this.client.folders.create({
+        name: folderName,
+        description: description
+      });
+
+      console.log(`📁 Created Letta folder: ${folderName}`);
+      return folder.id;
+    } catch (error) {
+      console.error('❌ Error creating document folder:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Upload a PDF file to a Letta folder
+   * @param {string} folderId - The folder ID
+   * @param {string} filePath - Path to the PDF file
+   * @param {string} fileName - Name of the file
+   * @returns {Promise<string>} - Upload job ID
+   */
+  async uploadPdfToFolder(folderId, filePath, fileName) {
+    try {
+      if (!this.isConfigured()) {
+        throw new Error('Letta not configured');
+      }
+
+      const fs = require('fs');
+      const fileStream = fs.createReadStream(filePath);
+
+      // Upload file to folder with required parameters
+      const uploadJob = await this.client.folders.files.upload(
+        fileStream,
+        folderId,
+        {
+          duplicateHandling: 'replace' // Replace existing files with same name
+        },
+        fileName // Pass filename as separate parameter
+      );
+
+      console.log(`📤 Uploaded PDF to Letta folder: ${fileName}`);
+      return uploadJob.id;
+    } catch (error) {
+      console.error('❌ Error uploading PDF to folder:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Attach a folder to an agent
+   * @param {string} agentId - The agent ID
+   * @param {string} folderId - The folder ID
+   * @returns {Promise<void>}
+   */
+  async attachFolderToAgent(agentId, folderId) {
+    try {
+      if (!this.isConfigured()) {
+        throw new Error('Letta not configured');
+      }
+
+      await this.client.agents.folders.attach(agentId, folderId);
+      console.log(`🔗 Attached folder to Letta agent: ${agentId}`);
+    } catch (error) {
+      console.error('❌ Error attaching folder to agent:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Store VAPI transcript in Letta agent
    * @param {string} agentId - The agent ID
    * @param {Array} messages - VAPI conversation messages
@@ -191,8 +271,8 @@ Always be encouraging, patient, and adaptive to the student's needs.`
 
       // Format messages for Letta - ensure we have at least one user message
       const lettaMessages = messages.map(msg => {
-        // Convert system messages to user messages for Letta compatibility
-        const role = msg.type === 'system' ? 'user' : (msg.type === 'user' ? 'user' : 'assistant');
+        // Use the role field directly if it exists, otherwise map from type
+        const role = msg.role || (msg.type === 'system' ? 'user' : (msg.type === 'user' ? 'user' : 'assistant'));
         return {
           role: role,
           content: msg.content,
@@ -200,7 +280,7 @@ Always be encouraging, patient, and adaptive to the student's needs.`
             timestamp: msg.timestamp || new Date().toISOString(),
             vapiCallId: msg.metadata?.callId,
             learningContext: msg.metadata?.learningContext,
-            originalType: msg.type // Keep track of original message type
+            originalType: msg.type || msg.role // Keep track of original message type
           }
         };
       });
@@ -339,6 +419,68 @@ Always be encouraging, patient, and adaptive to the student's needs.`
       return true;
     } catch (error) {
       console.error('❌ Error deleting agent:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Alias for getUserAgent - for compatibility with upload route
+   * @param {string} userId - The user ID
+   * @param {Object} userContext - User's learning context
+   * @returns {Promise<string>} - Agent ID
+   */
+  async getUserLettaAgent(userId, userContext = {}) {
+    return this.getUserAgent(userId, userContext);
+  }
+
+  /**
+   * Create a Letta agent (alias for createUserAgent)
+   * @param {string} userId - The user ID
+   * @param {Object} userContext - User's learning context
+   * @returns {Promise<string>} - Agent ID
+   */
+  async createLettaAgent(userId, userContext = {}) {
+    return this.createUserAgent(userId, userContext);
+  }
+
+  /**
+   * Update the shared agent with your custom code
+   * @param {Object} agentCode - Your custom agent configuration
+   * @returns {Promise<string>} - Updated agent ID
+   */
+  async updateSharedAgent(agentCode) {
+    try {
+      if (!this.isConfigured()) {
+        throw new Error('Letta not configured');
+      }
+
+      // Get the current shared agent
+      const agentId = await this.getSharedAgent();
+      
+      // Update the agent with your custom code
+      const updatedAgent = await this.client.agents.modify(agentId, agentCode);
+      
+      console.log(`🤖 Updated shared Letta agent with your custom code`);
+      return updatedAgent.id;
+    } catch (error) {
+      console.error('❌ Error updating shared agent:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Store user's Letta agent ID locally (for caching)
+   * @param {string} userId - The user ID
+   * @param {string} agentId - The agent ID
+   * @returns {Promise<void>}
+   */
+  async storeUserLettaAgent(userId, agentId) {
+    try {
+      // For now, we'll just log this. In production, you might want to store this in a database
+      console.log(`💾 Stored Letta agent ${agentId} for user ${userId}`);
+      return true;
+    } catch (error) {
+      console.error('❌ Error storing user Letta agent:', error);
       throw error;
     }
   }

@@ -5,6 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const { generateFlashcards } = require('../services/aiService')
 const dbService = require('../services/databaseService')
+const lettaService = require('../services/lettaService')
 
 const router = express.Router()
 
@@ -47,11 +48,20 @@ router.post('/pdf', upload.single('pdf'), async (req, res) => {
     const filePath = req.file.path
     const fileName = req.file.originalname
     const userId = req.body.userId || 'demo-user'
+    
+    console.log(`📁 Upload details:`)
+    console.log(`   File path: ${filePath}`)
+    console.log(`   Original name: ${fileName}`)
+    console.log(`   User ID: ${userId}`)
 
     // Extract text from PDF
     const dataBuffer = fs.readFileSync(filePath)
     const pdfData = await pdfParse(dataBuffer)
-    const extractedText = pdfData.text
+    let extractedText = pdfData.text
+    
+    // Add filename metadata at the top of the content for AI agent reference
+    const filenameHeader = `\n\n=== DOCUMENT METADATA ===\nOriginal Filename: ${fileName}\nUpload Date: ${new Date().toISOString()}\nDocument ID: ${Date.now()}\n========================\n\n`
+    extractedText = filenameHeader + extractedText
 
     if (!extractedText || extractedText.trim().length === 0) {
       return res.status(400).json({ 
@@ -109,6 +119,59 @@ router.post('/pdf', upload.single('pdf'), async (req, res) => {
     // Update document status
     await dbService.updateDocument(document.id, { processingStatus: 'completed' })
 
+    // Upload PDF to existing Letta folder for AI teacher context
+    try {
+      console.log(`📚 Uploading PDF to existing Letta folder for user: ${userId}`)
+      
+      // Get or create shared Letta agent
+      const agentId = await lettaService.getSharedAgent()
+      
+      // Use the existing "Professor X's PDFs" folder
+      const existingFolderId = 'source-6cd0aa93-c4dc-4d16-9920-d03ebeecd8ab' // This is the existing folder ID
+      
+      // Upload the PDF file to the existing folder
+      const uploadJobId = await lettaService.uploadPdfToFolder(existingFolderId, filePath, fileName)
+      
+      // Attach the folder to the agent so it can access the PDF
+      await lettaService.attachFolderToAgent(agentId, existingFolderId)
+      
+      // Store a conversation about the document upload
+      await lettaService.storeVapiTranscript(agentId, [
+        {
+          role: 'user',
+          content: `I've uploaded a new document "${fileName}" for learning. The document has been added to Professor X's PDFs folder with metadata including the original filename. Please help me understand this material.`,
+          timestamp: new Date().toISOString(),
+          metadata: {
+            documentId: document.id,
+            documentName: fileName,
+            originalFilename: fileName,
+            flashcardCount: flashcards.length,
+            folderId: existingFolderId,
+            contextType: 'pdf_upload'
+          }
+        },
+        {
+          role: 'assistant',
+          content: `Great! I can see you've uploaded "${fileName}" with ${flashcards.length} key concepts. I now have access to your document through the filesystem and can help you learn from it. What would you like to focus on first?`,
+          timestamp: new Date().toISOString(),
+          metadata: {
+            documentId: document.id,
+            documentName: fileName,
+            flashcardCount: flashcards.length,
+            folderId: existingFolderId,
+            contextType: 'pdf_teaching_context'
+          }
+        }
+      ])
+
+      console.log(`✅ PDF uploaded to existing Letta folder: ${fileName}`)
+      console.log(`📁 Using existing folder: Professor X's PDFs`)
+      console.log(`📤 Upload Job ID: ${uploadJobId}`)
+    } catch (lettaError) {
+      console.error('⚠️ Error uploading PDF to Letta filesystem:', lettaError.message)
+      // Don't fail the upload if Letta fails
+    }
+
     // Update user stats
     const currentStats = user.stats || {}
     await dbService.updateUser(userId, {
@@ -121,14 +184,22 @@ router.post('/pdf', upload.single('pdf'), async (req, res) => {
 
     res.json({
       success: true,
-      message: 'PDF processed successfully',
+      message: 'PDF processed successfully and uploaded to Letta filesystem',
       data: {
         documentId: document.id,
         fileName,
         textLength: extractedText.length,
         flashcardCount: flashcards.length,
         flashcards: savedFlashcards.slice(0, 5), // Return first 5 flashcards as preview
-        processingTime: new Date().toISOString()
+        processingTime: new Date().toISOString(),
+        lettaIntegration: {
+          status: 'PDF uploaded to existing Letta folder',
+          message: 'Your document has been added to Professor X\'s PDFs folder and is accessible to the AI teacher',
+          filesystem: {
+            approach: 'Document uploaded to existing Professor X\'s PDFs folder',
+            benefits: 'AI teacher can now use file tools to search and reference your document alongside other materials'
+          }
+        }
       }
     })
 

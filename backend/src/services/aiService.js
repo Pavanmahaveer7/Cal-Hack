@@ -137,10 +137,10 @@ Focus on key concepts, important terms, and understanding questions. Make them e
       flashcards.push({
         id: `term-${index + 1}`,
         type: 'definition',
-        question: `What is ${term}?`,
-        answer: `A key concept related to ${term} in this document.`,
+        front: `What is ${term}?`,
+        back: `A key concept related to ${term} in this document.`,
         difficulty: 'medium',
-        category: 'terms'
+        subject: 'terms'
       })
     })
 
@@ -149,10 +149,10 @@ Focus on key concepts, important terms, and understanding questions. Make them e
       flashcards.push({
         id: `concept-${index + 1}`,
         type: 'concept',
-        question: `Explain the relationship between ${concept} and the main topic.`,
-        answer: `${concept} is an important aspect that relates to the core concepts discussed in this document.`,
+        front: `Explain the relationship between ${concept} and the main topic.`,
+        back: `${concept} is an important aspect that relates to the core concepts discussed in this document.`,
         difficulty: 'hard',
-        category: 'concepts'
+        subject: 'concepts'
       })
     })
 

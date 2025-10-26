@@ -12,6 +12,19 @@ class DatabaseService {
     return this.db;
   }
 
+  // Clear all data
+  async clearAllData() {
+    const db = this.getDb();
+    
+    // Clear all tables
+    db.exec('DELETE FROM flashcards');
+    db.exec('DELETE FROM documents');
+    db.exec('DELETE FROM users');
+    db.exec('DELETE FROM conversations');
+    
+    console.log('🗑️ Cleared all database tables');
+  }
+
   // User operations
   async createUser(userData) {
     const db = this.getDb();
