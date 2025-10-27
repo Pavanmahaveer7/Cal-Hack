@@ -1,8 +1,4 @@
 # 🧠 Braillience  
-Accessible Flashcard Learning for the Blind
-
-**React** · **TypeScript** · **Node.js** · **Express** · **VAPI** · **Letta AI**
-
 ---
 
 🎥 **Demo Video:** https://youtu.be/1WcWxWYDlo8?si=g8aWwUHi0QJ5CZUg
