@@ -1,5 +1,4 @@
 # 🧠 Braillience  
----
 
 🎥 **Demo Video:** https://youtu.be/1WcWxWYDlo8?si=g8aWwUHi0QJ5CZUg
 
