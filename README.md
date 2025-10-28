@@ -1,6 +1,12 @@
 # 🧠 Braillience  
 
 🎥 **Demo Video:** https://youtu.be/1WcWxWYDlo8?si=g8aWwUHi0QJ5CZUg
+![React](https://img.shields.io/badge/Frontend-React_18-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/API-Express-000000?logo=express&logoColor=white)
+![VAPI](https://img.shields.io/badge/Voice-VAPI-purple)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
 ---
 ## 🎯 Problem Statement
