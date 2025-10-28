@@ -1,6 +1,6 @@
-# Contributing to Cal-Hack
+# Contributing to Braillience
 
-Thank you for your interest in contributing to Cal-Hack, the accessible language learning platform for blind users! This guide will help you get started with contributing to our project.
+Thank you for your interest in contributing to Braillience, the accessible language learning platform for blind users! This guide will help you get started with contributing to our project.
 
 ## 🎯 Our Mission
 
