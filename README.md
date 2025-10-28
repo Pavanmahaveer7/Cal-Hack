@@ -1,6 +1,42 @@
-# Braillience - Accessible Flashcard Learning
+# 🧠 Braillience  
+![React](https://img.shields.io/badge/Frontend-React_18-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/API-Express-000000?logo=express&logoColor=white)
+![VAPI](https://img.shields.io/badge/Voice-VAPI-purple)
+![Letta](https://img.shields.io/badge/AI-Letta-1E90FF?logo=openai&logoColor=white)
+![Gemini](https://img.shields.io/badge/AI-Google_Gemini-4285F4?logo=google&logoColor=white)
+![Claude](https://img.shields.io/badge/AI-Claude_Sonnet_3.5-FFD700?logo=anthropic&logoColor=black)
+![Accessibility](https://img.shields.io/badge/Focus-Accessibility-FF69B4?logo=accessible-icon&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
-An accessible flashcard learning application designed specifically for blind college students, featuring voice navigation and screen reader compatibility.
+🎥 **Demo Video:** https://youtu.be/1WcWxWYDlo8?si=g8aWwUHi0QJ5CZUg
+
+
+---
+## 🎯 Problem Statement
+
+Blind and visually impaired college students face significant barriers when using traditional learning platforms — most study apps are **not screen reader compatible**, rely on **visual cues**, and **don’t support voice-only control**.  
+Existing accessibility tools are fragmented, forcing students to switch between multiple apps to study effectively.  
+
+**The challenge:**  
+How can we create a fully voice-driven, accessible learning experience that allows blind students to **study hands-free**, generate flashcards automatically, and **navigate entirely through speech**?
+
+
+---
+
+## 💡 Our Solution
+
+**Braillience** is an **accessible learning platform** designed specifically for blind and visually impaired learners.  
+It enables teachers to upload PDFs, automatically generate flashcards using AI, and study completely via voice commands — no mouse or screen required. Students will receive a phone call and will converse with an AI agent.
+
+**Key Innovations:**
+
+- 🎙️ **Voice-First Learning Interface:** Fully voice-controlled navigation for flashcards, tests, and progress tracking.  
+- 🧠 **AI-Generated Flashcards:** Letta Agents analyze uploaded PDFs to create structured study sets automatically.  
+- 🗣️ **Seamless Voice Processing:** VAPI handles speech recognition and synthesis for real-time, natural voice interactions.  
+
+Result: A **hands-free, inclusive learning experience** that empowers blind students to study independently.
 
 ## 🎯 Project Structure
 
@@ -52,7 +88,30 @@ Braillience/
 └── README.md
 ```
 
-## 🚀 Quick Start
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 18 + TypeScript** — Modern and accessible UI  
+- **React Router** — App navigation  
+- **Framer Motion** — Subtle motion for transitions  
+
+### Backend
+- **Node.js + Express** — API and logic layer  
+- **Multer** — PDF uploads  
+- **JWT** — Authentication  
+- **Letta Agents** — AI content generation  
+
+### Voice & AI
+- **VAPI** — Real-time speech recognition and synthesis  
+- **Letta File + Agent** — Stateful learning assistance  
+- **Gemini AI** — Enhanced semantic understanding  
+- **Claude Sonnet 3.5** - AI automation and structured calling
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+
@@ -96,36 +155,6 @@ Braillience/
 - Voice navigation throughout the app
 - Screen reader compatibility
 
-## ♿ Accessibility Features
-
-- **Screen Reader Support:** Full NVDA, JAWS, VoiceOver compatibility
-- **Keyboard Navigation:** Complete keyboard-only operation
-- **High Contrast Mode:** Visual accessibility options
-- **Voice-First Design:** Primary interaction through voice
-- **ARIA Labels:** Comprehensive accessibility markup
-
-## 🛠️ Technology Stack
-
-### Frontend
-- **React 18** - UI framework
-- **React Router** - Navigation
-- **React Hot Toast** - Notifications
-- **Framer Motion** - Animations
-- **React Icons** - Icon library
-
-### Backend
-- **Node.js** - Runtime
-- **Express** - Web framework
-- **Multer** - File uploads
-- **PDF-Parse** - PDF processing
-- **JWT** - Authentication
-
-### Voice & AI
-- **Web Speech API** - Voice recognition
-- **Speech Synthesis** - Text-to-speech
-- **Gemini AI** - Flashcard generation (planned)
-- **VAPI** - Voice processing (planned)
-
 ## 📱 Features
 
 ### Core Functionality
@@ -136,8 +165,8 @@ Braillience/
 - **Progress Tracking:** Learning analytics and statistics
 
 ### User Experience
-- **Voice Navigation:** Complete app control via voice
-- **Responsive Design:** Works on all devices
+- **Voice Navigation:** Complete control via voice in call
+- **Responsive Design:** Works on all phones
 - **Offline Support:** Continue learning without internet
 - **Multi-language:** Support for various languages
 
@@ -169,14 +198,7 @@ Braillience/
 - **Accessibility:** `docs/ACCESSIBILITY_GUIDELINES.md`
 - **Contributing:** `CONTRIBUTING.md`
 
-## 🎉 Hackathon Ready
+## 📝 License
+This project is licensed under the MIT License.
 
-This project is optimized for hackathon demos with:
-- **Quick setup** in under 5 minutes
-- **Voice demo** showcasing accessibility
-- **Complete user flow** from upload to testing
-- **Professional UI** with accessibility focus
-
----
-
-**Built with ❤️ for accessibility and inclusion**
+**Built with ❤️ by the Braillience Team at Cal Hacks 2025 for accessibility and inclusion**
