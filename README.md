@@ -1,12 +1,17 @@
 # 🧠 Braillience  
-
-🎥 **Demo Video:** https://youtu.be/1WcWxWYDlo8?si=g8aWwUHi0QJ5CZUg
 ![React](https://img.shields.io/badge/Frontend-React_18-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/API-Express-000000?logo=express&logoColor=white)
 ![VAPI](https://img.shields.io/badge/Voice-VAPI-purple)
+![Letta](https://img.shields.io/badge/AI-Letta-1E90FF?logo=openai&logoColor=white)
+![Gemini](https://img.shields.io/badge/AI-Google_Gemini-4285F4?logo=google&logoColor=white)
+![Claude](https://img.shields.io/badge/AI-Claude_Sonnet_3.5-FFD700?logo=anthropic&logoColor=black)
+![Accessibility](https://img.shields.io/badge/Focus-Accessibility-FF69B4?logo=accessible-icon&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
+
+🎥 **Demo Video:** https://youtu.be/1WcWxWYDlo8?si=g8aWwUHi0QJ5CZUg
+
 
 ---
 ## 🎯 Problem Statement
