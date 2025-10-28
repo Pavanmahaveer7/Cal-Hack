@@ -101,11 +101,11 @@ Braillience/
 - **Node.js + Express** — API and logic layer  
 - **Multer** — PDF uploads  
 - **JWT** — Authentication  
-- **Letta Agents** — AI flashcard generation  
+- **Letta Agents** — AI content generation  
 
 ### Voice & AI
 - **VAPI** — Real-time speech recognition and synthesis  
-- **Letta File + Agent** — Flashcard creation and learning assistance  
+- **Letta File + Agent** — Stateful learning assistance  
 - **Gemini AI** — Enhanced semantic understanding  
 - **Claude Sonnet 3.5** - AI automation and structured calling
 
