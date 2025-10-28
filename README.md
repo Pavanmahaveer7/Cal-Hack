@@ -27,7 +27,7 @@ How can we create a fully voice-driven, accessible learning experience that allo
 
 ## 💡 Our Solution
 
-**Braillience** is an **accessible flashcard learning platform** designed specifically for blind and visually impaired learners.  
+**Braillience** is an **accessible learning platform** designed specifically for blind and visually impaired learners.  
 It enables teachers to upload PDFs, automatically generate flashcards using AI, and study completely via voice commands — no mouse or screen required. Students will receive a phone call and will converse with an AI agent.
 
 **Key Innovations:**
